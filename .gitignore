@@ -25,3 +25,4 @@ Manifest.toml
 
 # macOS finder file
 .DS_Store
+*.DS_Store
