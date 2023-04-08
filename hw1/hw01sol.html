@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Student Name and UID">
-<meta name="dcterms.date" content="2023-04-06">
+<meta name="dcterms.date" content="2023-04-07">
 
 <title>Biostat/Biomath M257 Homework 1</title>
 <style>
@@ -2628,9 +2628,22 @@ vertical-align: -.125em;
   <li><a href="#q2-answer" id="toc-q2-answer" class="nav-link" data-scroll-target="#q2-answer"><span class="toc-section-number">2.1</span>  Q2 answer</a>
   <ul class="collapse">
   <li><a href="#part-1" id="toc-part-1" class="nav-link" data-scroll-target="#part-1"><span class="toc-section-number">2.1.1</span>  Part 1</a></li>
+  <li><a href="#part-2" id="toc-part-2" class="nav-link" data-scroll-target="#part-2"><span class="toc-section-number">2.1.2</span>  Part 2</a></li>
+  <li><a href="#part-3" id="toc-part-3" class="nav-link" data-scroll-target="#part-3"><span class="toc-section-number">2.1.3</span>  Part 3</a></li>
+  <li><a href="#part-4" id="toc-part-4" class="nav-link" data-scroll-target="#part-4"><span class="toc-section-number">2.1.4</span>  Part 4</a></li>
+  <li><a href="#part-5" id="toc-part-5" class="nav-link" data-scroll-target="#part-5"><span class="toc-section-number">2.1.5</span>  Part 5</a></li>
   </ul></li>
   </ul></li>
-  <li><a href="#q3" id="toc-q3" class="nav-link" data-scroll-target="#q3"><span class="toc-section-number">3</span>  Q3</a></li>
+  <li><a href="#q3" id="toc-q3" class="nav-link" data-scroll-target="#q3"><span class="toc-section-number">3</span>  Q3</a>
+  <ul>
+  <li><a href="#q3-answer" id="toc-q3-answer" class="nav-link" data-scroll-target="#q3-answer"><span class="toc-section-number">3.1</span>  Q3 answer</a>
+  <ul class="collapse">
+  <li><a href="#part-1-1" id="toc-part-1-1" class="nav-link" data-scroll-target="#part-1-1"><span class="toc-section-number">3.1.1</span>  Part 1</a></li>
+  <li><a href="#part-2-1" id="toc-part-2-1" class="nav-link" data-scroll-target="#part-2-1"><span class="toc-section-number">3.1.2</span>  Part 2</a></li>
+  <li><a href="#part-3-1" id="toc-part-3-1" class="nav-link" data-scroll-target="#part-3-1"><span class="toc-section-number">3.1.3</span>  Part 3</a></li>
+  <li><a href="#part-4-1" id="toc-part-4-1" class="nav-link" data-scroll-target="#part-4-1"><span class="toc-section-number">3.1.4</span>  Part 4</a></li>
+  </ul></li>
+  </ul></li>
   <li><a href="#q4" id="toc-q4" class="nav-link" data-scroll-target="#q4"><span class="toc-section-number">4</span>  Q4</a></li>
   <li><a href="#q5" id="toc-q5" class="nav-link" data-scroll-target="#q5"><span class="toc-section-number">5</span>  Q5</a></li>
   <li><a href="#q6" id="toc-q6" class="nav-link" data-scroll-target="#q6"><span class="toc-section-number">6</span>  Q6</a></li>
@@ -2662,7 +2675,7 @@ vertical-align: -.125em;
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">April 6, 2023</p>
+      <p class="date">April 7, 2023</p>
     </div>
   </div>
   
@@ -2702,7 +2715,7 @@ vertical-align: -.125em;
 <section id="part-1" class="level4" data-number="2.1.1">
 <h4 data-number="2.1.1" class="anchored" data-anchor-id="part-1"><span class="header-section-number">2.1.1</span> Part 1</h4>
 <p>The association rule of addition does not always hold in Julia. The reason is that real numbers are stored as a limited number of binary codes (0/1) in the computer, and it will be rounded if the decimal part cannot be written as a sum of <span class="math inline">\(1/2^i\)</span>. This rounding issue causes the imprecision of float calculation we see here.</p>
-<div class="cell" data-execution_count="2">
+<div class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fl">0.1</span>; y <span class="op">=</span> <span class="fl">0.1</span>; z <span class="op">=</span> <span class="fl">1</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>((x <span class="op">+</span> y) <span class="op">+</span> z)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(x <span class="op">+</span> (y <span class="op">+</span> z))</span>
@@ -2714,17 +2727,77 @@ false</code></pre>
 </div>
 </div>
 </section>
+<section id="part-2" class="level4" data-number="2.1.2">
+<h4 data-number="2.1.2" class="anchored" data-anchor-id="part-2"><span class="header-section-number">2.1.2</span> Part 2</h4>
+<p>The association rule of multiplication does not always hold in Julia. The reason is similar (float precision).</p>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fl">0.1</span>; y <span class="op">=</span> <span class="fl">0.2</span>; z <span class="op">=</span> <span class="fl">0.3</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>((x <span class="op">*</span> y) <span class="op">*</span> z)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(x <span class="op">*</span> (y <span class="op">*</span> z))</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>((x <span class="op">*</span> y) <span class="op">*</span> z <span class="op">==</span> x <span class="op">*</span> (y <span class="op">*</span> z))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>0.006000000000000001
+0.006
+false</code></pre>
+</div>
+</div>
+</section>
+<section id="part-3" class="level4" data-number="2.1.3">
+<h4 data-number="2.1.3" class="anchored" data-anchor-id="part-3"><span class="header-section-number">2.1.3</span> Part 3</h4>
+<p>The distributive rule does not always hold in Julia. The reason is similar (float precision).</p>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fl">0.1</span>; y <span class="op">=</span> <span class="fl">0.2</span>; z <span class="op">=</span> <span class="fl">0.3</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>((x <span class="op">+</span> y) <span class="op">*</span> z)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(x <span class="op">*</span> z <span class="op">+</span> y <span class="op">*</span> z)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>((x <span class="op">+</span> y) <span class="op">*</span> z <span class="op">==</span> x <span class="op">*</span> z <span class="op">+</span> y <span class="op">*</span> z)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>0.09000000000000001
+0.09
+false</code></pre>
+</div>
+</div>
+</section>
+<section id="part-4" class="level4" data-number="2.1.4">
+<h4 data-number="2.1.4" class="anchored" data-anchor-id="part-4"><span class="header-section-number">2.1.4</span> Part 4</h4>
+<p>Multiplying any normal float number by 0 will give a 0. However, some special values such as <code>NaN</code> and <code>Inf</code> are also stored as <code>Float64</code>. Multiplying these special float values by 0 will NOT give a 0.</p>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> <span class="fu">rand</span>(<span class="dt">Float64</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(a <span class="op">*</span> <span class="fl">0</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="cn">Inf</span> <span class="op">*</span> <span class="fl">0</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="cn">NaN</span> <span class="op">*</span> <span class="fl">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>0.0
+NaN
+NaN</code></pre>
+</div>
+</div>
+</section>
+<section id="part-5" class="level4" data-number="2.1.5">
+<h4 data-number="2.1.5" class="anchored" data-anchor-id="part-5"><span class="header-section-number">2.1.5</span> Part 5</h4>
+<p>It is not always true as shown below.</p>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>a, b <span class="op">=</span> <span class="fu">rand</span>(<span class="dt">Float64</span>, <span class="fl">2</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(a <span class="op">/</span> b)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(a <span class="op">*</span> (<span class="fl">1</span> <span class="op">/</span> b))</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(a <span class="op">/</span> b <span class="op">==</span> a <span class="op">*</span> (<span class="fl">1</span> <span class="op">/</span> b))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>2.7819977586697
+2.7819977586697004
+false</code></pre>
+</div>
+</div>
+</section>
 </section>
 </section>
 <section id="q3" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="q3"><span class="header-section-number">3</span> Q3</h2>
 <p>Consider Julia function</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">g</span>(k)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>        k <span class="op">=</span> <span class="fl">5</span>k <span class="op">-</span> <span class="fl">1</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    k</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">g</span>(k)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>        k <span class="op">=</span> <span class="fl">5</span>k <span class="op">-</span> <span class="fl">1</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    k</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <ol type="1">
 <li>Use <code>@code_llvm</code> to find the LLVM bitcode of compiled <code>g</code> with <code>Int64</code> input.<br>
 </li>
@@ -2734,13 +2807,172 @@ false</code></pre>
 </li>
 <li>Read Julia documentation on <code>@fastmath</code> and repeat the questions 1-3 on the function</li>
 </ol>
-<div class="sourceCode" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">g_fastmath</span>(k)  </span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@fastmath</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>  </span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>        k <span class="op">=</span> <span class="fl">5</span>k <span class="op">-</span> <span class="fl">1</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    k</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">g_fastmath</span>(k)  </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@fastmath</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>  </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>        k <span class="op">=</span> <span class="fl">5</span>k <span class="op">-</span> <span class="fl">1</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    k</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Explain what does the macro <code>@fastmath</code> do? And why are the bitcodes for <code>g</code> and <code>g_fastmath</code> with <code>Float64</code> input different? (Hint: Q2)</p>
+<section id="q3-answer" class="level3" data-number="3.1">
+<h3 data-number="3.1" class="anchored" data-anchor-id="q3-answer"><span class="header-section-number">3.1</span> Q3 answer</h3>
+<section id="part-1-1" class="level4" data-number="3.1.1">
+<h4 data-number="3.1.1" class="anchored" data-anchor-id="part-1-1"><span class="header-section-number">3.1.1</span> Part 1</h4>
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">g</span>(k)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>        k <span class="op">=</span> <span class="fl">5</span>k <span class="op">-</span> <span class="fl">1</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    k</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="pp">@code_llvm</span> <span class="fu">g</span>(<span class="fl">1</span><span class="op">::</span><span class="dt">Int64</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>;  @ /Users/yuyuanlin/Documents/UCLA_files/course_work/BIS_M257/hw/biostat-257-2023-spring/hw1/hw01sol.ipynb:1 within `g`
+define i64 @julia_g_717(i64 signext %0) #0 {
+top:
+;  @ /Users/yuyuanlin/Documents/UCLA_files/course_work/BIS_M257/hw/biostat-257-2023-spring/hw1/hw01sol.ipynb:3 within `g`
+; ┌ @ int.jl:88 within `*`
+   %1 = mul i64 %0, 9765625
+; └
+; ┌ @ int.jl:86 within `-`
+   %2 = add i64 %1, -2441406
+; └
+;  @ /Users/yuyuanlin/Documents/UCLA_files/course_work/BIS_M257/hw/biostat-257-2023-spring/hw1/hw01sol.ipynb:5 within `g`
+  ret i64 %2
+}</code></pre>
+</div>
+</div>
+</section>
+<section id="part-2-1" class="level4" data-number="3.1.2">
+<h4 data-number="3.1.2" class="anchored" data-anchor-id="part-2-1"><span class="header-section-number">3.1.2</span> Part 2</h4>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@code_llvm</span> <span class="fu">g</span>(<span class="fl">1.0</span><span class="op">::</span><span class="dt">Float64</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>;  @ /Users/yuyuanlin/Documents/UCLA_files/course_work/BIS_M257/hw/biostat-257-2023-spring/hw1/hw01sol.ipynb:1 within `g`
+define double @julia_g_938(double %0) #0 {
+top:
+;  @ /Users/yuyuanlin/Documents/UCLA_files/course_work/BIS_M257/hw/biostat-257-2023-spring/hw1/hw01sol.ipynb:3 within `g`
+; ┌ @ promotion.jl:389 within `*` @ float.jl:385
+   %1 = fmul double %0, 5.000000e+00
+; └
+; ┌ @ promotion.jl:390 within `-` @ float.jl:384
+   %2 = fadd double %1, -1.000000e+00
+; └
+; ┌ @ promotion.jl:389 within `*` @ float.jl:385
+   %3 = fmul double %2, 5.000000e+00
+; └
+; ┌ @ promotion.jl:390 within `-` @ float.jl:384
+   %4 = fadd double %3, -1.000000e+00
+; └
+; ┌ @ promotion.jl:389 within `*` @ float.jl:385
+   %5 = fmul double %4, 5.000000e+00
+; └
+; ┌ @ promotion.jl:390 within `-` @ float.jl:384
+   %6 = fadd double %5, -1.000000e+00
+; └
+; ┌ @ promotion.jl:389 within `*` @ float.jl:385
+   %7 = fmul double %6, 5.000000e+00
+; └
+; ┌ @ promotion.jl:390 within `-` @ float.jl:384
+   %8 = fadd double %7, -1.000000e+00
+; └
+; ┌ @ promotion.jl:389 within `*` @ float.jl:385
+   %9 = fmul double %8, 5.000000e+00
+; └
+; ┌ @ promotion.jl:390 within `-` @ float.jl:384
+   %10 = fadd double %9, -1.000000e+00
+; └
+; ┌ @ promotion.jl:389 within `*` @ float.jl:385
+   %11 = fmul double %10, 5.000000e+00
+; └
+; ┌ @ promotion.jl:390 within `-` @ float.jl:384
+   %12 = fadd double %11, -1.000000e+00
+; └
+; ┌ @ promotion.jl:389 within `*` @ float.jl:385
+   %13 = fmul double %12, 5.000000e+00
+; └
+; ┌ @ promotion.jl:390 within `-` @ float.jl:384
+   %14 = fadd double %13, -1.000000e+00
+; └
+; ┌ @ promotion.jl:389 within `*` @ float.jl:385
+   %15 = fmul double %14, 5.000000e+00
+; └
+; ┌ @ promotion.jl:390 within `-` @ float.jl:384
+   %16 = fadd double %15, -1.000000e+00
+; └
+; ┌ @ promotion.jl:389 within `*` @ float.jl:385
+   %17 = fmul double %16, 5.000000e+00
+; └
+; ┌ @ promotion.jl:390 within `-` @ float.jl:384
+   %18 = fadd double %17, -1.000000e+00
+; └
+; ┌ @ promotion.jl:389 within `*` @ float.jl:385
+   %19 = fmul double %18, 5.000000e+00
+; └
+; ┌ @ promotion.jl:390 within `-` @ float.jl:384
+   %20 = fadd double %19, -1.000000e+00
+; └
+;  @ /Users/yuyuanlin/Documents/UCLA_files/course_work/BIS_M257/hw/biostat-257-2023-spring/hw1/hw01sol.ipynb:5 within `g`
+  ret double %20
+}</code></pre>
+</div>
+</div>
+</section>
+<section id="part-3-1" class="level4" data-number="3.1.3">
+<h4 data-number="3.1.3" class="anchored" data-anchor-id="part-3-1"><span class="header-section-number">3.1.3</span> Part 3</h4>
+<p>Comparing the LLVM bitcodes from Part 1 and 2, we can see that the bitcode for <code>g</code> with <code>Int64</code> input is much simpler than that for <code>g</code> with <code>Float64</code> input. This is because the method for <code>Int64</code> input is much simpler than that for <code>Float64</code> input.</p>
+</section>
+<section id="part-4-1" class="level4" data-number="3.1.4">
+<h4 data-number="3.1.4" class="anchored" data-anchor-id="part-4-1"><span class="header-section-number">3.1.4</span> Part 4</h4>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">g_fastmath</span>(k)  </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@fastmath</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>  </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>        k <span class="op">=</span> <span class="fl">5</span>k <span class="op">-</span> <span class="fl">1</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    k</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="pp">@code_llvm</span> <span class="fu">g_fastmath</span>(<span class="fl">1</span><span class="op">::</span><span class="dt">Int64</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>;  @ /Users/yuyuanlin/Documents/UCLA_files/course_work/BIS_M257/hw/biostat-257-2023-spring/hw1/hw01sol.ipynb:1 within `g_fastmath`
+define i64 @julia_g_fastmath_941(i64 signext %0) #0 {
+top:
+;  @ /Users/yuyuanlin/Documents/UCLA_files/course_work/BIS_M257/hw/biostat-257-2023-spring/hw1/hw01sol.ipynb:3 within `g_fastmath`
+; ┌ @ fastmath.jl:270 within `mul_fast`
+; │┌ @ int.jl:88 within `*`
+    %1 = mul i64 %0, 9765625
+; └└
+; ┌ @ fastmath.jl:270 within `sub_fast`
+; │┌ @ int.jl:86 within `-`
+    %2 = add i64 %1, -2441406
+; └└
+;  @ /Users/yuyuanlin/Documents/UCLA_files/course_work/BIS_M257/hw/biostat-257-2023-spring/hw1/hw01sol.ipynb:5 within `g_fastmath`
+  ret i64 %2
+}</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@code_llvm</span> <span class="fu">g_fastmath</span>(<span class="fl">1.0</span><span class="op">::</span><span class="dt">Float64</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>;  @ /Users/yuyuanlin/Documents/UCLA_files/course_work/BIS_M257/hw/biostat-257-2023-spring/hw1/hw01sol.ipynb:1 within `g_fastmath`
+define double @julia_g_fastmath_943(double %0) #0 {
+top:
+;  @ /Users/yuyuanlin/Documents/UCLA_files/course_work/BIS_M257/hw/biostat-257-2023-spring/hw1/hw01sol.ipynb:3 within `g_fastmath`
+; ┌ @ fastmath.jl:267 within `mul_fast` @ fastmath.jl:167
+   %1 = fmul fast double %0, 0x4162A05F20000000
+; └
+; ┌ @ fastmath.jl:267 within `sub_fast` @ fastmath.jl:166
+   %2 = fadd fast double %1, 0xC142A05F00000000
+; └
+;  @ /Users/yuyuanlin/Documents/UCLA_files/course_work/BIS_M257/hw/biostat-257-2023-spring/hw1/hw01sol.ipynb:5 within `g_fastmath`
+  ret double %2
+}</code></pre>
+</div>
+</div>
+<p>The macro <code>@fastmath</code> executes a transformed version of the expression, which calls functions that may violate strict IEEE semantics. This allows the fastest possible. This may reduce the precision of float numbers, and cause numerical changes. The LLVM bitcode for <code>g_fastmath</code> with <code>Float64</code> input is as long as that for <code>g</code> or <code>g_fastmath</code> with <code>Int64</code> input, which is much simpler than that for <code>g</code> with <code>Float64</code> input.</p>
+</section>
+</section>
 </section>
 <section id="q4" class="level2" data-number="4">
 <h2 data-number="4" class="anchored" data-anchor-id="q4"><span class="header-section-number">4</span> Q4</h2>
