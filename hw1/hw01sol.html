@@ -2768,7 +2768,7 @@ false</code></pre>
 <section id="part-2" class="level4">
 <h4 class="anchored" data-anchor-id="part-2">Part 2</h4>
 <p>The association rule of multiplication does not always hold in Julia. The reason is similar (float precision).</p>
-<div class="cell" data-execution_count="6">
+<div class="cell" data-execution_count="45">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fl">0.1</span>; y <span class="op">=</span> <span class="fl">0.2</span>; z <span class="op">=</span> <span class="fl">0.3</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>((x <span class="op">*</span> y) <span class="op">*</span> z)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(x <span class="op">*</span> (y <span class="op">*</span> z))</span>
@@ -2813,15 +2813,15 @@ NaN</code></pre>
 <section id="part-5" class="level4">
 <h4 class="anchored" data-anchor-id="part-5">Part 5</h4>
 <p>It is not always true as shown below.</p>
-<div class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>a, b <span class="op">=</span> <span class="fu">rand</span>(<span class="dt">Float64</span>, <span class="fl">2</span>)</span>
+<div class="cell" data-execution_count="89">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>a, b <span class="op">=</span> <span class="fl">0.14493106122612986</span>, <span class="fl">0.6025371373738003</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(a <span class="op">/</span> b)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(a <span class="op">*</span> (<span class="fl">1</span> <span class="op">/</span> b))</span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(a <span class="op">/</span> b <span class="op">==</span> a <span class="op">*</span> (<span class="fl">1</span> <span class="op">/</span> b))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>0.27337941005904537
-0.27337941005904537
-true</code></pre>
+<pre><code>0.24053465294740486
+0.24053465294740484
+false</code></pre>
 </div>
 </div>
 </section>
@@ -3317,10 +3317,24 @@ top:
 </section>
 <section id="part-5-1" class="level4">
 <h4 class="anchored" data-anchor-id="part-5-1">Part 5</h4>
-<p>Proof: Assuming <span class="math inline">\(\mathbf{U}\)</span> is an upper triangular matrix, we have: <span class="math inline">\(u_{ij} = 0\)</span> when <span class="math inline">\(i &lt; j\)</span>. And, also because</p>
+<p>Proof: Assuming <span class="math inline">\(\mathbf{U}\)</span> is an upper triangular matrix of <span class="math inline">\(n\)</span>-dimension, we have: <span class="math inline">\(u_{ij} = 0\)</span> when <span class="math inline">\(i &gt; j\)</span>. And, also because <span class="math inline">\(\mathbf{U}\)</span> is orthogonal, we have: <span class="math inline">\(u_i^T u_j = 0\)</span> when <span class="math inline">\(i \neq j\)</span>, where <span class="math inline">\(u_i\)</span> stands for the <span class="math inline">\(i^{th}\)</span> column of <span class="math inline">\(\mathbf{U}\)</span>.</p>
+<p>We can prove the result by induction.</p>
+<p><strong>Step 1:</strong> For <span class="math inline">\(i = 1\)</span>, we have: <span class="math inline">\(u_1^T u_1 = 1\)</span>, <span class="math inline">\(u_{j1}=0\)</span> when <span class="math inline">\(j &gt; 1\)</span>. So, <span class="math inline">\(u_{11} = 1\)</span> and <span class="math inline">\(u_1 = e_1\)</span>.</p>
+<p><strong>Step 2:</strong> Assuming that for an integer <span class="math inline">\(k\)</span>, <span class="math inline">\(u_j = e_j\)</span>, i.e., <span class="math inline">\(u_{jj} = 1\)</span> and all other entries on <span class="math inline">\(u_j\)</span> are <span class="math inline">\(0\)</span>’s, for any <span class="math inline">\(j \leq k\)</span>.</p>
+<p><strong>Step 3:</strong> For <span class="math inline">\(k+1\)</span>, we have: <span class="math inline">\(u_{k+1}^T u_{k+1} = 1\)</span>, and <span class="math inline">\(u_i^T u_{k+1} = 0\)</span> when <span class="math inline">\(i \neq k+1\)</span>. Considering for <span class="math inline">\(i = 1, \cdots, k\)</span>, we have: <span class="math inline">\(u_i^T u_{k+1} = 0\)</span>, so <span class="math inline">\(e_i^T u_{k+1} = 0\)</span>. Thus the <span class="math inline">\(1^{st}\)</span> to the <span class="math inline">\(k^{th}\)</span> elements of <span class="math inline">\(u_{k+1}\)</span> are <span class="math inline">\(0\)</span>’s. Also, considering <span class="math inline">\(u_{ij} = 0\)</span> when <span class="math inline">\(i &lt; j\)</span> (triangular matrix), the <span class="math inline">\((k+1)^{th}\)</span> to the <span class="math inline">\(n^{th}\)</span> elements of <span class="math inline">\(u_{k+1}\)</span> are <span class="math inline">\(0\)</span>’s. So, <span class="math inline">\(u_{(k+1)(k+1)} = 1\)</span> and <span class="math inline">\(u_{k+1} = e_{k+1}\)</span>.</p>
+<p><strong>Step 4:</strong> By induction, we have: <span class="math inline">\(u_j = e_j\)</span>, i.e., <span class="math inline">\(u_{jj} = 1\)</span> and all other entries of <span class="math inline">\(\mathbf{U}\)</span> are <span class="math inline">\(0\)</span>’s. So, <span class="math inline">\(\mathbf{U}\)</span> is an identity matrix, which is diagonal. Thus, we have proved the theorem.</p>
 </section>
 <section id="part-6" class="level4">
 <h4 class="anchored" data-anchor-id="part-6">Part 6</h4>
+<p>Proof: assuming <span class="math inline">\(\mathbf{A}\)</span> and <span class="math inline">\(\mathbf{B}\)</span> are two arbitrary orthogonal matrices of <span class="math inline">\(n\)</span>-dimension and <span class="math inline">\(\mathbf{C} = \mathbf{A}\mathbf{B}\)</span>, we have: <span class="math inline">\(\mathbf{A}^T\mathbf{A} = \mathbf{I}\)</span> and <span class="math inline">\(\mathbf{B}^T\mathbf{B} = \mathbf{I}\)</span>. Thus:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\mathbf{C}\mathbf{C}^T &amp;= \mathbf{A}\mathbf{B}\mathbf{B}^T\mathbf{A}^T \\
+&amp;= \mathbf{A}\mathbf{I}\mathbf{A}^T \\
+&amp;= \mathbf{I}
+\end{aligned}
+\]</span></p>
+<p>And this implies that <span class="math inline">\(\mathbf{C}\)</span> is an orthogonal matrix. Therefore, we have proved the theorem.</p>
 </section>
 </section>
 </section>
