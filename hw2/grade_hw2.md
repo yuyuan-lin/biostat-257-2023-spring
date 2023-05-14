@@ -20,7 +20,7 @@ Yes
 
 Yes
 
-### Completeness, correctness and efficiency of solution: 42/45
+### Completeness, correctness and efficiency of solution: 62/45
 
 - Q1.3 (NNMF correctness) (10/10)
 
