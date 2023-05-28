@@ -1,7 +1,8 @@
 {
 	"folders": [
 		{
-			"path": "biostat-257-2023-spring"
+			"path": "."
 		}
-	]
+	],
+	"settings": {}
 }
