@@ -29,3 +29,6 @@ Manifest.toml
 
 # hw4 solution
 hw4/pgrksol.csv.gz
+
+# hw6 test data
+hw6/lmm_data.csv
