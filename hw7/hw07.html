@@ -2834,34 +2834,59 @@ Q(\boldsymbol{\beta}, \boldsymbol{\Sigma}, \sigma^2 \mid \boldsymbol{\beta}^{(t)
 =&amp; (\mathbf{y_i}-\mathbf{X}_i\boldsymbol{\beta})^T(\mathbf{y_i}-\mathbf{X}_i\boldsymbol{\beta}) - 2(\mathbf{y_i}-\mathbf{X}_i\boldsymbol{\beta})^T\mathbf{Z}\mathbb{E}_{\boldsymbol{\gamma}_i} + \operatorname{tr}(\mathbf{Z}^T\mathbf{Z}\mathbb{V}_{\boldsymbol{\gamma}_i}) + \mathbb{E}_{\boldsymbol{\gamma}_i}^T\mathbf{Z}^T\mathbf{Z}\mathbb{E}_{\boldsymbol{\gamma}_i} \\
 \end{aligned}
 \]</span></p>
-<p>Where <span class="math inline">\(\mathbb{V}_{\boldsymbol{\gamma}_i}\)</span> is the conditional covariance matrix of <span class="math inline">\(\boldsymbol{\gamma}_i\)</span> given <span class="math inline">\(\mathbf{y}_i\)</span> and <span class="math inline">\(\boldsymbol{\theta}^{(t)}\)</span> and <span class="math inline">\(\mathbb{E}_{\boldsymbol{\gamma}_i}\)</span> is the conditional expectation of <span class="math inline">\(\boldsymbol{\gamma}_i\)</span>. The formula is given in Question 1 (the upper script of $, , $ are omitted for simplicity).:</p>
+<p>Where <span class="math inline">\(\mathbb{V}_{\boldsymbol{\gamma}_i}\)</span> is the conditional covariance matrix of <span class="math inline">\(\boldsymbol{\gamma}_i\)</span> given <span class="math inline">\(\mathbf{y}_i\)</span> and <span class="math inline">\(\boldsymbol{\theta}^{(t)}\)</span> and <span class="math inline">\(\mathbb{E}_{\boldsymbol{\gamma}_i}\)</span> is the conditional expectation of <span class="math inline">\(\boldsymbol{\gamma}_i\)</span>. The formula is given in Question 1 (the upper script of <span class="math inline">\(\mathbf{\Sigma},\ \boldsymbol{\beta},\ \sigma\)</span> are omitted for simplicity).:</p>
 <p><span class="math display">\[
 \begin{aligned}
 \mathbb{V}_{\boldsymbol{\gamma}_i} &amp;= \mathbf{\Sigma} - \mathbf{\Sigma}\mathbf{Z}^T (\mathbf{Z}\mathbf{\Sigma}\mathbf{Z}^T + \sigma^2 \mathbf{I}_n)^{-1}\mathbf{Z}\mathbf{\Sigma} \\  
 \mathbb{E}_{\boldsymbol{\gamma}_i} &amp;= \mathbf{\Sigma}\mathbf{Z}^T (\mathbf{Z}\mathbf{\Sigma}\mathbf{Z}^T + \sigma^2 \mathbf{I}_n)^{-1}(\mathbf{y}_i - \mathbf{X}_i\boldsymbol{\beta}) \\
 \end{aligned}
 \]</span></p>
-Put everything together (maybe too long to show): $$
-<span class="math display">\[\begin{aligned}
+<p>Put everything together (maybe too long to show):</p>
+<p><span class="math display">\[
+\begin{aligned}
 &amp; Q(\boldsymbol{\theta}|\boldsymbol{\theta}^{(t)}) \\
 =&amp; \sum_{i=1}^m\left\{
-    -\frac{n}{2}\log(2\pi)
-    -\frac{n}{2}\log(\sigma^2)
+    -\frac{n_i}{2}\log(2\pi)
+    -\frac{n_i}{2}\log(\sigma^2)
     -\frac{q}{2}\log(2\pi)
     -\frac{1}{2}\log\det(\mathbf{\Sigma})
-    
     -\frac{1}{2\sigma^2}\left[(\mathbf{y_i}-\mathbf{X}_i\boldsymbol{\beta})^T(\mathbf{y_i}-\mathbf{X}_i\boldsymbol{\beta}) - 2(\mathbf{y_i}-\mathbf{X}_i\boldsymbol{\beta})^T\mathbf{Z}\mathbb{E}_{\boldsymbol{\gamma}_i} + \operatorname{tr}(\mathbf{Z}^T\mathbf{Z}\mathbb{V}_{\boldsymbol{\gamma}_i}) + \mathbb{E}_{\boldsymbol{\gamma}_i}^T\mathbf{Z}^T\mathbf{Z}\mathbb{E}_{\boldsymbol{\gamma}_i}
                               \right]
-
     -\frac{1}{2}\left[ \operatorname{tr}(\mathbf{\Sigma}^{-1}\mathbb{V}_{\boldsymbol{\gamma}_i}) + \mathbb{E}_{\boldsymbol{\gamma}_i}^T\mathbf{\Sigma}^{-1}\mathbb{E}_{\boldsymbol{\gamma}_i}
                       \right]
     \right\}
-\end{aligned}\]</span>
-<p>$$</p>
+\end{aligned}
+\]</span></p>
 </section>
 <section id="part-3" class="level4" data-number="2.1.3">
 <h4 data-number="2.1.3" class="anchored" data-anchor-id="part-3"><span class="header-section-number">2.1.3</span> Part 3</h4>
 <p><span class="math inline">\(\boldsymbol{\theta}^{(t+1)} = \operatorname{argmax}_{\boldsymbol{\theta}} Q(\boldsymbol{\theta} \mid \boldsymbol{\theta}^{(t)})\)</span>. So, we take derivative of <span class="math inline">\(Q(\boldsymbol{\theta} \mid \boldsymbol{\theta}^{(t)})\)</span> with respect to <span class="math inline">\(\boldsymbol{\theta}\)</span> and set it to zero.</p>
+<p>For <span class="math inline">\(\boldsymbol{\beta}\)</span>: Everything containing <span class="math inline">\(\boldsymbol{\beta}\)</span> is shown in <span class="math inline">\(Q_{\boldsymbol{\beta}}\)</span>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+Q_{\boldsymbol{\beta}} &amp;= \sum_{i=1}^m \left\{
+    -\frac{1}{2\sigma^2}\left[(\mathbf{y_i}-\mathbf{X}_i\boldsymbol{\beta})^T(\mathbf{y_i}-\mathbf{X}_i\boldsymbol{\beta}) - 2(\mathbf{y_i}-\mathbf{X}_i\boldsymbol{\beta})^T\mathbf{Z}\mathbb{E}_{\boldsymbol{\gamma}_i}
+                              \right]
+    \right\} \\
+\frac{\partial Q_{\boldsymbol{\beta}}}{\partial \boldsymbol{\beta}} &amp;=
+    \sum_{i=1}^m \left\{
+    - \frac{1}{\sigma^2}\left[\mathbf{X}_i^T\mathbf{X}_i\boldsymbol{\beta} - \mathbf{X}_i^T\mathbf{y}_i + \mathbf{X}_i^T\mathbf{Z}\mathbb{E}_{\boldsymbol{\gamma}_i}
+                              \right]
+    \right\}
+\end{aligned}
+\]</span></p>
+<p>For <span class="math inline">\(\sigma^2\)</span>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+Q_{\sigma^2} &amp;= \sum_{i=1}^m \left\{-\frac{n_i}{2}\log(\sigma^2) -\frac{1}{2\sigma^2}\left[(\mathbf{y_i}-\mathbf{X}_i\boldsymbol{\beta})^T(\mathbf{y_i}-\mathbf{X}_i\boldsymbol{\beta}) - 2(\mathbf{y_i}-\mathbf{X}_i\boldsymbol{\beta})^T\mathbf{Z}\mathbb{E}_{\boldsymbol{\gamma}_i} + \operatorname{tr}(\mathbf{Z}^T\mathbf{Z}\mathbb{V}_{\boldsymbol{\gamma}_i}) + \mathbb{E}_{\boldsymbol{\gamma}_i}^T\mathbf{Z}^T\mathbf{Z}\mathbb{E}_{\boldsymbol{\gamma}_i}\right] \right\} \\
+\end{aligned}
+\]</span></p>
+<p>For <span class="math inline">\(\mathbf{\Sigma}\)</span>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+Q_{\mathbf{\Sigma}} &amp;= \sum_{i=1}^m \left\{-\frac{1}{2}\log\det(\mathbf{\Sigma}) -\frac{1}{2}\left[ \operatorname{tr}(\mathbf{\Sigma}^{-1}\mathbb{V}_{\boldsymbol{\gamma}_i}) + \mathbb{E}_{\boldsymbol{\gamma}_i}^T\mathbf{\Sigma}^{-1}\mathbb{E}_{\boldsymbol{\gamma}_i} \right] \right\} \\
+\end{aligned}
+\]</span></p>
 </section>
 </section>
 </section>
