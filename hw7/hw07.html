@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Yuyuan Lin (804886544)">
-<meta name="dcterms.date" content="2023-06-14">
+<meta name="dcterms.date" content="2023-06-15">
 
 <title>Biostat/Biomath M257 Homework 7</title>
 <style>
@@ -2656,7 +2656,10 @@ vertical-align: -.125em;
   <li><a href="#correctness-2" id="toc-correctness-2" class="nav-link" data-scroll-target="#correctness-2"><span class="toc-section-number">9.1</span>  Correctness</a></li>
   <li><a href="#efficiency-2" id="toc-efficiency-2" class="nav-link" data-scroll-target="#efficiency-2"><span class="toc-section-number">9.2</span>  Efficiency</a></li>
   </ul></li>
-  <li><a href="#q10.-10-pts-em-vs-newton-type-algorithms" id="toc-q10.-10-pts-em-vs-newton-type-algorithms" class="nav-link" data-scroll-target="#q10.-10-pts-em-vs-newton-type-algorithms"><span class="toc-section-number">10</span>  Q10. (10 pts) EM vs Newton type algorithms</a></li>
+  <li><a href="#q10.-10-pts-em-vs-newton-type-algorithms" id="toc-q10.-10-pts-em-vs-newton-type-algorithms" class="nav-link" data-scroll-target="#q10.-10-pts-em-vs-newton-type-algorithms"><span class="toc-section-number">10</span>  Q10. (10 pts) EM vs Newton type algorithms</a>
+  <ul>
+  <li><a href="#q10-answer" id="toc-q10-answer" class="nav-link" data-scroll-target="#q10-answer"><span class="toc-section-number">10.1</span>  Q10 Answer</a></li>
+  </ul></li>
   </ul>
 </nav>
 </div>
@@ -2684,7 +2687,7 @@ vertical-align: -.125em;
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 14, 2023</p>
+      <p class="date">June 15, 2023</p>
     </div>
   </div>
   
@@ -2695,16 +2698,40 @@ vertical-align: -.125em;
 </header>
 
 <p>System information (for reproducibility):</p>
-<div class="cell" data-tags="[]">
+<div class="cell" data-tags="[]" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">versioninfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Julia Version 1.9.0
+Commit 8e630552924 (2023-05-07 11:25 UTC)
+Platform Info:
+  OS: macOS (arm64-apple-darwin22.4.0)
+  CPU: 8 × Apple M1 Pro
+  WORD_SIZE: 64
+  LIBM: libopenlibm
+  LLVM: libLLVM-14.0.6 (ORCJIT, apple-m1)
+  Threads: 6 on 6 virtual cores
+Environment:
+  JULIA_EDITOR = code
+  JULIA_NUM_THREADS = 6</code></pre>
+</div>
 </div>
 <p>Load packages:</p>
-<div class="cell" data-tags="[]">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">activate</span>(<span class="fu">pwd</span>())</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">instantiate</span>()</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">status</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-tags="[]" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">activate</span>(<span class="fu">pwd</span>())</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">instantiate</span>()</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">status</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>  Activating project at `~/Documents/UCLA_files/course_work/BIS_M257/hw/biostat-257-2023-spring/hw7`</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Status `~/Documents/UCLA_files/course_work/BIS_M257/hw/biostat-257-2023-spring/hw7/Project.toml`
+  [6e4b80f9] BenchmarkTools v1.3.2
+  [31c24e10] Distributions v0.25.95
+  [37e2e46d] LinearAlgebra
+  [9a3f8284] Random</code></pre>
+</div>
 </div>
 <p>Again we continue with the linear mixed effects model (LMM) <span class="math display">\[
     \mathbf{Y}_i = \mathbf{X}_i \boldsymbol{\beta} + \mathbf{Z}_i \boldsymbol{\gamma}_i + \boldsymbol{\epsilon}_i, \quad i=1,\ldots,n,
@@ -2723,9 +2750,9 @@ vertical-align: -.125em;
 \ell(\boldsymbol{\beta}, \boldsymbol{\Sigma}, \sigma_0^2) = \sum_{i=1}^m \ell_i(\boldsymbol{\beta}, \boldsymbol{\Sigma}, \sigma_0^2).
 \]</span></p>
 <p>In HW6, we used the nonlinear programming (NLP) approach (Newton type algorithms) for optimization. In this assignment, we derive and implement an expectation-maximization (EM) algorithm for the same problem.</p>
-<div class="cell" data-tags="[]">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load necessary packages; make sure install them first</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">BenchmarkTools</span>, <span class="bu">Distributions</span>, <span class="bu">LinearAlgebra</span>, <span class="bu">Random</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-tags="[]" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load necessary packages; make sure install them first</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">BenchmarkTools</span>, <span class="bu">Distributions</span>, <span class="bu">LinearAlgebra</span>, <span class="bu">Random</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="q1.-10-pts-refresher-on-normal-normal-model" class="level2" data-number="1">
 <h2 data-number="1" class="anchored" data-anchor-id="q1.-10-pts-refresher-on-normal-normal-model"><span class="header-section-number">1</span> Q1. (10 pts) Refresher on normal-normal model</h2>
@@ -2868,23 +2895,31 @@ Q_{\boldsymbol{\beta}} &amp;= \sum_{i=1}^m \left\{
     -\frac{1}{2\sigma^2}\left[(\mathbf{y_i}-\mathbf{X}_i\boldsymbol{\beta})^T(\mathbf{y_i}-\mathbf{X}_i\boldsymbol{\beta}) - 2(\mathbf{y_i}-\mathbf{X}_i\boldsymbol{\beta})^T\mathbf{Z}\mathbb{E}_{\boldsymbol{\gamma}_i}
                               \right]
     \right\} \\
-\frac{\partial Q_{\boldsymbol{\beta}}}{\partial \boldsymbol{\beta}} &amp;=
+\frac{\partial Q}{\partial \boldsymbol{\beta}} &amp;=
     \sum_{i=1}^m \left\{
-    - \frac{1}{\sigma^2}\left[\mathbf{X}_i^T\mathbf{X}_i\boldsymbol{\beta} - \mathbf{X}_i^T\mathbf{y}_i + \mathbf{X}_i^T\mathbf{Z}\mathbb{E}_{\boldsymbol{\gamma}_i}
-                              \right]
-    \right\}
+    - \frac{1}{\sigma^2}\left[\mathbf{X}_i^T\mathbf{X}_i\boldsymbol{\beta} - \mathbf{X}_i^T\mathbf{y}_i + \mathbf{X}_i^T\mathbf{Z}\mathbb{E}_{\boldsymbol{\gamma}_i} \right] \right\} \\
+    &amp;= -\frac{1}{\sigma^2} \sum_{i=1}^m \left(\mathbf{X}_i^T\mathbf{X}_i\boldsymbol{\beta} \right) + \frac{1}{\sigma^2} \sum_{i=1}^m \left(\mathbf{X}_i^T\mathbf{y}_i - \mathbf{X}_i^T\mathbf{Z}\mathbb{E}_{\boldsymbol{\gamma}_i} \right) \\
+\text{Thus}\quad \boldsymbol{\beta}^{(t+1)} &amp;=  \left[\sum_{i=1}^m \left(\mathbf{X}_i^T\mathbf{X}_i\right)\right]^{-1}\sum_{i=1}^m \left(\mathbf{X}_i^T\mathbf{y}_i - \mathbf{X}_i^T\mathbf{Z}\mathbb{E}^{(t)}_{\boldsymbol{\gamma}_i} \right)
 \end{aligned}
 \]</span></p>
 <p>For <span class="math inline">\(\sigma^2\)</span>:</p>
 <p><span class="math display">\[
 \begin{aligned}
 Q_{\sigma^2} &amp;= \sum_{i=1}^m \left\{-\frac{n_i}{2}\log(\sigma^2) -\frac{1}{2\sigma^2}\left[(\mathbf{y_i}-\mathbf{X}_i\boldsymbol{\beta})^T(\mathbf{y_i}-\mathbf{X}_i\boldsymbol{\beta}) - 2(\mathbf{y_i}-\mathbf{X}_i\boldsymbol{\beta})^T\mathbf{Z}\mathbb{E}_{\boldsymbol{\gamma}_i} + \operatorname{tr}(\mathbf{Z}^T\mathbf{Z}\mathbb{V}_{\boldsymbol{\gamma}_i}) + \mathbb{E}_{\boldsymbol{\gamma}_i}^T\mathbf{Z}^T\mathbf{Z}\mathbb{E}_{\boldsymbol{\gamma}_i}\right] \right\} \\
+\frac{\partial Q}{\partial \sigma^2}&amp; = -\frac{1}{\sigma^2} \sum_{i=1}^m \frac{n_i}{2} + \frac{1}{2(\sigma^2)^2} \sum_{i=1}^m \left[(\mathbf{y_i}-\mathbf{X}_i\boldsymbol{\beta})^T(\mathbf{y_i}-\mathbf{X}_i\boldsymbol{\beta}) - 2(\mathbf{y_i}-\mathbf{X}_i\boldsymbol{\beta})^T\mathbf{Z}\mathbb{E}_{\boldsymbol{\gamma}_i} + \operatorname{tr}(\mathbf{Z}^T\mathbf{Z}\mathbb{V}_{\boldsymbol{\gamma}_i}) + \mathbb{E}_{\boldsymbol{\gamma}_i}^T\mathbf{Z}^T\mathbf{Z}\mathbb{E}_{\boldsymbol{\gamma}_i}\right] \\
+\text{Thus}\quad {\sigma^2}^{(t+1)} &amp;= \frac{1}{\sum_{i=1}^m n_i} \sum_{i=1}^m \left[(\mathbf{y_i}-\mathbf{X}_i\boldsymbol{\beta}^{(t)})^T(\mathbf{y_i}-\mathbf{X}_i\boldsymbol{\beta}^{(t)}) - 2(\mathbf{y_i}-\mathbf{X}_i\boldsymbol{\beta}^{(t)})^T\mathbf{Z}\mathbb{E}^{(t)}_{\boldsymbol{\gamma}_i} + \operatorname{tr}(\mathbf{Z}^T\mathbf{Z}\mathbb{V}^{(t)}_{\boldsymbol{\gamma}_i}) + \mathbb{E}_{\boldsymbol{\gamma}_i}^{(t)T}\mathbf{Z}^T\mathbf{Z}\mathbb{E}^{(t)}_{\boldsymbol{\gamma}_i}\right]
 \end{aligned}
 \]</span></p>
 <p>For <span class="math inline">\(\mathbf{\Sigma}\)</span>:</p>
 <p><span class="math display">\[
 \begin{aligned}
 Q_{\mathbf{\Sigma}} &amp;= \sum_{i=1}^m \left\{-\frac{1}{2}\log\det(\mathbf{\Sigma}) -\frac{1}{2}\left[ \operatorname{tr}(\mathbf{\Sigma}^{-1}\mathbb{V}_{\boldsymbol{\gamma}_i}) + \mathbb{E}_{\boldsymbol{\gamma}_i}^T\mathbf{\Sigma}^{-1}\mathbb{E}_{\boldsymbol{\gamma}_i} \right] \right\} \\
+&amp;= \sum_{i=1}^m \left\{-\frac{1}{2}\log\det(\mathbf{\Sigma})
+                       -\frac{1}{2}\left[ \operatorname{tr}(\mathbf{\Sigma}^{-1}\mathbb{V}_{\boldsymbol{\gamma}_i}) + \operatorname{tr}(\mathbb{E}_{\boldsymbol{\gamma}_i}^T\mathbf{\Sigma}^{-1}\mathbb{E}_{\boldsymbol{\gamma}_i})\right] \right\} \\
+&amp;= \sum_{i=1}^m \left\{-\frac{1}{2}\log\det(\mathbf{\Sigma})
+                       -\frac{1}{2} \operatorname{tr}\left[ \mathbf{\Sigma}^{-1}(\mathbb{V}_{\boldsymbol{\gamma}_i} + \mathbb{E}_{\boldsymbol{\gamma}_i}\mathbb{E}_{\boldsymbol{\gamma}_i}^T)\right] \right\} \\
+\frac{\partial Q}{\partial \mathbf{\Sigma}} &amp;= -\frac{1}{2}\sum_{i=1}^m \left\{ \mathbf{\Sigma}^{-1} - \mathbf{\Sigma}^{-1}(\mathbb{V}_{\boldsymbol{\gamma}_i} + \mathbb{E}_{\boldsymbol{\gamma}_i}\mathbb{E}_{\boldsymbol{\gamma}_i}^T)\mathbf{\Sigma}^{-1} \right\} \\
+\mathbf{\Sigma}^{(t+1)} &amp;= \frac{1}{m} \sum_{1}^{m} \left(\mathbb{V}_{\boldsymbol{\gamma}_i}^{(t)} + \mathbb{E}_{\boldsymbol{\gamma}_i}^{(t)}\mathbb{E}_{\boldsymbol{\gamma}_i}^{(t)T}\right)
 \end{aligned}
 \]</span></p>
 </section>
@@ -2893,513 +2928,735 @@ Q_{\mathbf{\Sigma}} &amp;= \sum_{i=1}^m \left\{-\frac{1}{2}\log\det(\mathbf{\Sig
 <section id="q3.-20-pts-objective-of-a-single-datum" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="q3.-20-pts-objective-of-a-single-datum"><span class="header-section-number">3</span> Q3. (20 pts) Objective of a single datum</h2>
 <p>We modify the code from HW6 to evaluate the objective, the conditional mean of <span class="math inline">\(\boldsymbol{\gamma}\)</span>, and the conditional variance of <span class="math inline">\(\boldsymbol{\gamma}\)</span>. Start-up code is provided below. You do <em>not</em> have to use this code.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define a type that holds an LMM datum</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> LmmObs{T <span class="op">&lt;:</span><span class="dt"> AbstractFloat</span>}</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># data</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    y          <span class="op">::</span><span class="dt"> Vector{T}</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    X          <span class="op">::</span><span class="dt"> Matrix{T}</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    Z          <span class="op">::</span><span class="dt"> Matrix{T}</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># posterior mean and variance of random effects γ</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    μγ         <span class="op">::</span><span class="dt"> Vector{T} </span><span class="co"># posterior mean of random effects</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    νγ         <span class="op">::</span><span class="dt"> Matrix{T} </span><span class="co"># posterior variance of random effects</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># TODO: add whatever intermediate arrays you may want to pre-allocate</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    yty        <span class="op">::</span><span class="dt"> T</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    rtr        <span class="op">::</span><span class="dt"> Vector{T}</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    xty        <span class="op">::</span><span class="dt"> Vector{T}</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    zty        <span class="op">::</span><span class="dt"> Vector{T}</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    ztr        <span class="op">::</span><span class="dt"> Vector{T}</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    ltztr      <span class="op">::</span><span class="dt"> Vector{T}</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    xtr        <span class="op">::</span><span class="dt"> Vector{T}</span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    storage_p  <span class="op">::</span><span class="dt"> Vector{T}</span></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    storage_q  <span class="op">::</span><span class="dt"> Vector{T}</span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    xtx        <span class="op">::</span><span class="dt"> Matrix{T}</span></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    ztx        <span class="op">::</span><span class="dt"> Matrix{T}</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    ztz        <span class="op">::</span><span class="dt"> Matrix{T}</span></span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    ltztzl     <span class="op">::</span><span class="dt"> Matrix{T}</span></span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    storage_qq <span class="op">::</span><span class="dt"> Matrix{T}</span></span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;&quot;&quot;</span></span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="st">    LmmObs(y::Vector, X::Matrix, Z::Matrix)</span></span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="st">Create an LMM datum of type `LmmObs`.</span></span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;&quot;&quot;</span></span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">LmmObs</span>(</span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>    y<span class="op">::</span><span class="dt">Vector{T}</span>, </span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>    X<span class="op">::</span><span class="dt">Matrix{T}</span>, </span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>    Z<span class="op">::</span><span class="dt">Matrix{T}</span>) <span class="kw">where</span> T <span class="op">&lt;:</span><span class="dt"> AbstractFloat</span></span>
-<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>    n, p, q <span class="op">=</span> <span class="fu">size</span>(X, <span class="fl">1</span>), <span class="fu">size</span>(X, <span class="fl">2</span>), <span class="fu">size</span>(Z, <span class="fl">2</span>)</span>
-<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    μγ         <span class="op">=</span> <span class="fu">Vector</span><span class="dt">{T}</span>(<span class="cn">undef</span>, q)</span>
-<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>    νγ         <span class="op">=</span> <span class="fu">Matrix</span><span class="dt">{T}</span>(<span class="cn">undef</span>, q, q)</span>
-<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>    yty        <span class="op">=</span> <span class="fu">abs2</span>(<span class="fu">norm</span>(y))</span>
-<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>    rtr        <span class="op">=</span> <span class="fu">Vector</span><span class="dt">{T}</span>(<span class="cn">undef</span>, <span class="fl">1</span>)</span>
-<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>    xty        <span class="op">=</span> <span class="fu">transpose</span>(X) <span class="op">*</span> y</span>
-<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>    zty        <span class="op">=</span> <span class="fu">transpose</span>(Z) <span class="op">*</span> y</span>
-<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>    ztr        <span class="op">=</span> <span class="fu">similar</span>(zty)</span>
-<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>    ltztr      <span class="op">=</span> <span class="fu">similar</span>(zty)</span>
-<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>    xtr        <span class="op">=</span> <span class="fu">Vector</span><span class="dt">{T}</span>(<span class="cn">undef</span>, p)</span>
-<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>    storage_p  <span class="op">=</span> <span class="fu">similar</span>(xtr)</span>
-<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>    storage_q  <span class="op">=</span> <span class="fu">Vector</span><span class="dt">{T}</span>(<span class="cn">undef</span>, q)</span>
-<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>    xtx        <span class="op">=</span> <span class="fu">transpose</span>(X) <span class="op">*</span> X</span>
-<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>    ztx        <span class="op">=</span> <span class="fu">transpose</span>(Z) <span class="op">*</span> X</span>
-<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>    ztz        <span class="op">=</span> <span class="fu">transpose</span>(Z) <span class="op">*</span> Z</span>
-<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>    ltztzl     <span class="op">=</span> <span class="fu">similar</span>(ztz)</span>
-<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>    storage_qq <span class="op">=</span> <span class="fu">similar</span>(ztz)</span>
-<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>    <span class="fu">LmmObs</span>(y, X, Z, μγ, νγ, </span>
-<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>        yty, rtr, xty, zty, ztr, ltztr, xtr,</span>
-<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>        storage_p, storage_q, </span>
-<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>        xtx, ztx, ztz, ltztzl, storage_qq)</span>
-<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
-<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;&quot;&quot;</span></span>
-<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a><span class="st">    logl!(obs::LmmObs, β, Σ, L, σ², updater = false)</span></span>
-<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a><span class="st">Evaluate the log-likelihood of a single LMM datum at parameter values `β`, `Σ`, </span></span>
-<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a><span class="st">and `σ²`. The lower triangular Cholesky factor `L` of `Σ` must be supplied too.</span></span>
-<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a><span class="st">The fields `obs.μγ` and `obs.νγ` are overwritten by the posterior mean and </span></span>
-<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a><span class="st">posterior variance of random effects. If `updater==true`, fields `obs.ztr`, </span></span>
-<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a><span class="st">`obs.xtr`, and `obs.rtr` are updated according to input parameter values. </span></span>
-<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a><span class="st">Otherwise, it assumes these three fields are pre-computed. </span></span>
-<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;&quot;&quot;</span></span>
-<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">logl!</span>(</span>
-<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>        obs     <span class="op">::</span><span class="dt"> LmmObs{T}</span>, </span>
-<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>        β       <span class="op">::</span><span class="dt"> Vector{T}</span>, </span>
-<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>        Σ       <span class="op">::</span><span class="dt"> Matrix{T}</span>,</span>
-<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a>        L       <span class="op">::</span><span class="dt"> Matrix{T}</span>,</span>
-<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a>        σ²      <span class="op">::</span><span class="dt"> T</span>,</span>
-<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>        updater <span class="op">::</span><span class="dt"> Bool </span><span class="op">=</span> <span class="cn">false</span></span>
-<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a>        ) <span class="kw">where</span> T <span class="op">&lt;:</span><span class="dt"> AbstractFloat</span></span>
-<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a>    n, p, q <span class="op">=</span> <span class="fu">size</span>(obs.X, <span class="fl">1</span>), <span class="fu">size</span>(obs.X, <span class="fl">2</span>), <span class="fu">size</span>(obs.Z, <span class="fl">2</span>)</span>
-<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a>    σ²inv   <span class="op">=</span> <span class="fu">inv</span>(σ²)</span>
-<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a>    <span class="co">####################</span></span>
-<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Evaluate objective</span></span>
-<span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a>    <span class="co">####################</span></span>
-<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a>    <span class="co"># form the q-by-q matrix: Lt Zt Z L</span></span>
-<span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a>    <span class="fu">copy!</span>(obs.ltztzl, obs.ztz)</span>
-<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a>    BLAS.<span class="fu">trmm!</span>(<span class="ch">&#39;L&#39;</span>, <span class="ch">&#39;L&#39;</span>, <span class="ch">&#39;T&#39;</span>, <span class="ch">&#39;N&#39;</span>, <span class="fu">T</span>(<span class="fl">1</span>), L, obs.ltztzl) <span class="co"># O(q^3)</span></span>
-<span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a>    BLAS.<span class="fu">trmm!</span>(<span class="ch">&#39;R&#39;</span>, <span class="ch">&#39;L&#39;</span>, <span class="ch">&#39;N&#39;</span>, <span class="ch">&#39;N&#39;</span>, <span class="fu">T</span>(<span class="fl">1</span>), L, obs.ltztzl) <span class="co"># O(q^3)        </span></span>
-<span id="cb4-86"><a href="#cb4-86" aria-hidden="true" tabindex="-1"></a>    <span class="co"># form the q-by-q matrix: M = σ² I + Lt Zt Z L</span></span>
-<span id="cb4-87"><a href="#cb4-87" aria-hidden="true" tabindex="-1"></a>    <span class="fu">copy!</span>(obs.storage_qq, obs.ltztzl)</span>
-<span id="cb4-88"><a href="#cb4-88" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@inbounds</span> <span class="cf">for</span> j <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>q</span>
-<span id="cb4-89"><a href="#cb4-89" aria-hidden="true" tabindex="-1"></a>        obs.storage_qq[j, j] <span class="op">+=</span> σ²</span>
-<span id="cb4-90"><a href="#cb4-90" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb4-91"><a href="#cb4-91" aria-hidden="true" tabindex="-1"></a>    LAPACK.<span class="fu">potrf!</span>(<span class="ch">&#39;U&#39;</span>, obs.storage_qq) <span class="co"># O(q^3)</span></span>
-<span id="cb4-92"><a href="#cb4-92" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Zt * res</span></span>
-<span id="cb4-93"><a href="#cb4-93" aria-hidden="true" tabindex="-1"></a>    updater <span class="op">&amp;&amp;</span> BLAS.<span class="fu">gemv!</span>(<span class="ch">&#39;N&#39;</span>, <span class="fu">T</span>(<span class="op">-</span><span class="fl">1</span>), obs.ztx, β, <span class="fu">T</span>(<span class="fl">1</span>), <span class="fu">copy!</span>(obs.ztr, obs.zty)) <span class="co"># O(pq)</span></span>
-<span id="cb4-94"><a href="#cb4-94" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Lt * (Zt * res)</span></span>
-<span id="cb4-95"><a href="#cb4-95" aria-hidden="true" tabindex="-1"></a>    BLAS.<span class="fu">trmv!</span>(<span class="ch">&#39;L&#39;</span>, <span class="ch">&#39;T&#39;</span>, <span class="ch">&#39;N&#39;</span>, L, <span class="fu">copy!</span>(obs.ltztr, obs.ztr))    <span class="co"># O(q^2)</span></span>
-<span id="cb4-96"><a href="#cb4-96" aria-hidden="true" tabindex="-1"></a>    <span class="co"># storage_q = (Mchol.U&#39;) \ (Lt * (Zt * res))</span></span>
-<span id="cb4-97"><a href="#cb4-97" aria-hidden="true" tabindex="-1"></a>    BLAS.<span class="fu">trsv!</span>(<span class="ch">&#39;U&#39;</span>, <span class="ch">&#39;T&#39;</span>, <span class="ch">&#39;N&#39;</span>, obs.storage_qq, <span class="fu">copy!</span>(obs.storage_q, obs.ltztr)) <span class="co"># O(q^3)</span></span>
-<span id="cb4-98"><a href="#cb4-98" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Xt * res = Xt * y - Xt * X * β</span></span>
-<span id="cb4-99"><a href="#cb4-99" aria-hidden="true" tabindex="-1"></a>    updater <span class="op">&amp;&amp;</span> BLAS.<span class="fu">gemv!</span>(<span class="ch">&#39;N&#39;</span>, <span class="fu">T</span>(<span class="op">-</span><span class="fl">1</span>), obs.xtx, β, <span class="fu">T</span>(<span class="fl">1</span>), <span class="fu">copy!</span>(obs.xtr, obs.xty))</span>
-<span id="cb4-100"><a href="#cb4-100" aria-hidden="true" tabindex="-1"></a>    <span class="co"># l2 norm of residual vector</span></span>
-<span id="cb4-101"><a href="#cb4-101" aria-hidden="true" tabindex="-1"></a>    updater <span class="op">&amp;&amp;</span> (obs.rtr[<span class="fl">1</span>] <span class="op">=</span> obs.yty <span class="op">-</span> <span class="fu">dot</span>(obs.xty, β) <span class="op">-</span> <span class="fu">dot</span>(obs.xtr, β))</span>
-<span id="cb4-102"><a href="#cb4-102" aria-hidden="true" tabindex="-1"></a>    <span class="co"># assemble pieces</span></span>
-<span id="cb4-103"><a href="#cb4-103" aria-hidden="true" tabindex="-1"></a>    logl<span class="op">::</span><span class="dt">T </span><span class="op">=</span> n <span class="op">*</span> <span class="fu">log</span>(<span class="fl">2</span>π) <span class="op">+</span> (n <span class="op">-</span> q) <span class="op">*</span> <span class="fu">log</span>(σ²) <span class="co"># constant term</span></span>
-<span id="cb4-104"><a href="#cb4-104" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@inbounds</span> <span class="cf">for</span> j <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>q <span class="co"># log det term</span></span>
-<span id="cb4-105"><a href="#cb4-105" aria-hidden="true" tabindex="-1"></a>        logl <span class="op">+=</span> <span class="fl">2</span><span class="fu">log</span>(obs.storage_qq[j, j])</span>
-<span id="cb4-106"><a href="#cb4-106" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb4-107"><a href="#cb4-107" aria-hidden="true" tabindex="-1"></a>    qf    <span class="op">=</span> <span class="fu">abs2</span>(<span class="fu">norm</span>(obs.storage_q)) <span class="co"># quadratic form term</span></span>
-<span id="cb4-108"><a href="#cb4-108" aria-hidden="true" tabindex="-1"></a>    logl <span class="op">+=</span> (obs.rtr[<span class="fl">1</span>] <span class="op">-</span> qf) <span class="op">*</span> σ²inv </span>
-<span id="cb4-109"><a href="#cb4-109" aria-hidden="true" tabindex="-1"></a>    logl <span class="op">/=</span> <span class="op">-</span><span class="fl">2</span></span>
-<span id="cb4-110"><a href="#cb4-110" aria-hidden="true" tabindex="-1"></a>    <span class="co">######################################</span></span>
-<span id="cb4-111"><a href="#cb4-111" aria-hidden="true" tabindex="-1"></a>    <span class="co"># TODO: Evaluate posterior mean and variance</span></span>
-<span id="cb4-112"><a href="#cb4-112" aria-hidden="true" tabindex="-1"></a>    <span class="co">######################################    </span></span>
-<span id="cb4-113"><a href="#cb4-113" aria-hidden="true" tabindex="-1"></a>    <span class="co"># TODO</span></span>
-<span id="cb4-114"><a href="#cb4-114" aria-hidden="true" tabindex="-1"></a>    <span class="co">###################</span></span>
-<span id="cb4-115"><a href="#cb4-115" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Return</span></span>
-<span id="cb4-116"><a href="#cb4-116" aria-hidden="true" tabindex="-1"></a>    <span class="co">###################        </span></span>
-<span id="cb4-117"><a href="#cb4-117" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> logl</span>
-<span id="cb4-118"><a href="#cb4-118" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="80">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define a type that holds an LMM datum</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> LmmObs{T <span class="op">&lt;:</span><span class="dt"> AbstractFloat</span>}</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># data</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    y          <span class="op">::</span><span class="dt"> Vector{T}</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    X          <span class="op">::</span><span class="dt"> Matrix{T}</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    Z          <span class="op">::</span><span class="dt"> Matrix{T}</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># posterior mean and variance of random effects γ</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    μγ         <span class="op">::</span><span class="dt"> Vector{T} </span><span class="co"># posterior mean of random effects</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    νγ         <span class="op">::</span><span class="dt"> Matrix{T} </span><span class="co"># posterior variance of random effects</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># TODO: add whatever intermediate arrays you may want to pre-allocate</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    yty        <span class="op">::</span><span class="dt"> T</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    rtr        <span class="op">::</span><span class="dt"> Vector{T}</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    xty        <span class="op">::</span><span class="dt"> Vector{T}</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    zty        <span class="op">::</span><span class="dt"> Vector{T}</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    ztr        <span class="op">::</span><span class="dt"> Vector{T}</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    ltztr      <span class="op">::</span><span class="dt"> Vector{T}</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    xtr        <span class="op">::</span><span class="dt"> Vector{T}</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    storage_p  <span class="op">::</span><span class="dt"> Vector{T}</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    storage_q  <span class="op">::</span><span class="dt"> Vector{T}</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    storage_q2 <span class="op">::</span><span class="dt"> Vector{T}</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    xtx        <span class="op">::</span><span class="dt"> Matrix{T}</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    ztx        <span class="op">::</span><span class="dt"> Matrix{T}</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    ztz        <span class="op">::</span><span class="dt"> Matrix{T}</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    ltztzl     <span class="op">::</span><span class="dt"> Matrix{T}</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    storage_qq <span class="op">::</span><span class="dt"> Matrix{T}</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    storage_qq2<span class="op">::</span><span class="dt"> Matrix{T}</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    storage_qq3<span class="op">::</span><span class="dt"> Matrix{T}</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;&quot;&quot;</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a><span class="st">    LmmObs(y::Vector, X::Matrix, Z::Matrix)</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a><span class="st">Create an LMM datum of type `LmmObs`.</span></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;&quot;&quot;</span></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">LmmObs</span>(</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>    y<span class="op">::</span><span class="dt">Vector{T}</span>, </span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>    X<span class="op">::</span><span class="dt">Matrix{T}</span>, </span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>    Z<span class="op">::</span><span class="dt">Matrix{T}</span>) <span class="kw">where</span> T <span class="op">&lt;:</span><span class="dt"> AbstractFloat</span></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>    n, p, q <span class="op">=</span> <span class="fu">size</span>(X, <span class="fl">1</span>), <span class="fu">size</span>(X, <span class="fl">2</span>), <span class="fu">size</span>(Z, <span class="fl">2</span>)</span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>    μγ         <span class="op">=</span> <span class="fu">Vector</span><span class="dt">{T}</span>(<span class="cn">undef</span>, q)</span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>    νγ         <span class="op">=</span> <span class="fu">Matrix</span><span class="dt">{T}</span>(<span class="cn">undef</span>, q, q)</span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>    yty        <span class="op">=</span> <span class="fu">abs2</span>(<span class="fu">norm</span>(y))</span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>    rtr        <span class="op">=</span> <span class="fu">Vector</span><span class="dt">{T}</span>(<span class="cn">undef</span>, <span class="fl">1</span>)</span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>    xty        <span class="op">=</span> <span class="fu">transpose</span>(X) <span class="op">*</span> y</span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>    zty        <span class="op">=</span> <span class="fu">transpose</span>(Z) <span class="op">*</span> y</span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>    ztr        <span class="op">=</span> <span class="fu">similar</span>(zty)</span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>    ltztr      <span class="op">=</span> <span class="fu">similar</span>(zty)</span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>    xtr        <span class="op">=</span> <span class="fu">Vector</span><span class="dt">{T}</span>(<span class="cn">undef</span>, p)</span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>    storage_p  <span class="op">=</span> <span class="fu">similar</span>(xtr)</span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>    storage_q  <span class="op">=</span> <span class="fu">Vector</span><span class="dt">{T}</span>(<span class="cn">undef</span>, q)</span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>    storage_q2 <span class="op">=</span> <span class="fu">similar</span>(storage_q)</span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>    xtx        <span class="op">=</span> <span class="fu">transpose</span>(X) <span class="op">*</span> X</span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>    ztx        <span class="op">=</span> <span class="fu">transpose</span>(Z) <span class="op">*</span> X</span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>    ztz        <span class="op">=</span> <span class="fu">transpose</span>(Z) <span class="op">*</span> Z</span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>    ltztzl     <span class="op">=</span> <span class="fu">similar</span>(ztz)</span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>    storage_qq <span class="op">=</span> <span class="fu">similar</span>(ztz)</span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>    storage_qq2<span class="op">=</span> <span class="fu">similar</span>(ztz)</span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>    storage_qq3<span class="op">=</span> <span class="fu">similar</span>(ztz)</span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>    <span class="fu">LmmObs</span>(y, X, Z, μγ, νγ, </span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>        yty, rtr, xty, zty, ztr, ltztr, xtr,</span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>        storage_p, storage_q, storage_q2,</span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a>        xtx, ztx, ztz, ltztzl, storage_qq, storage_qq2, storage_qq3)</span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;&quot;&quot;</span></span>
+<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a><span class="st">    logl!(obs::LmmObs, β, Σ, L, σ², updater = false)</span></span>
+<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a><span class="st">Evaluate the log-likelihood of a single LMM datum at parameter values `β`, `Σ`, </span></span>
+<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a><span class="st">and `σ²`. The lower triangular Cholesky factor `L` of `Σ` must be supplied too.</span></span>
+<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a><span class="st">The fields `obs.μγ` and `obs.νγ` are overwritten by the posterior mean and </span></span>
+<span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a><span class="st">posterior variance of random effects. If `updater==true`, fields `obs.ztr`, </span></span>
+<span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a><span class="st">`obs.xtr`, and `obs.rtr` are updated according to input parameter values. </span></span>
+<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a><span class="st">Otherwise, it assumes these three fields are pre-computed. </span></span>
+<span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;&quot;&quot;</span></span>
+<span id="cb7-75"><a href="#cb7-75" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">logl!</span>(</span>
+<span id="cb7-76"><a href="#cb7-76" aria-hidden="true" tabindex="-1"></a>        obs     <span class="op">::</span><span class="dt"> LmmObs{T}</span>, </span>
+<span id="cb7-77"><a href="#cb7-77" aria-hidden="true" tabindex="-1"></a>        β       <span class="op">::</span><span class="dt"> Vector{T}</span>, </span>
+<span id="cb7-78"><a href="#cb7-78" aria-hidden="true" tabindex="-1"></a>        Σ       <span class="op">::</span><span class="dt"> Matrix{T}</span>,</span>
+<span id="cb7-79"><a href="#cb7-79" aria-hidden="true" tabindex="-1"></a>        L       <span class="op">::</span><span class="dt"> Matrix{T}</span>,</span>
+<span id="cb7-80"><a href="#cb7-80" aria-hidden="true" tabindex="-1"></a>        σ²      <span class="op">::</span><span class="dt"> T</span>,</span>
+<span id="cb7-81"><a href="#cb7-81" aria-hidden="true" tabindex="-1"></a>        updater <span class="op">::</span><span class="dt"> Bool </span><span class="op">=</span> <span class="cn">false</span></span>
+<span id="cb7-82"><a href="#cb7-82" aria-hidden="true" tabindex="-1"></a>        ) <span class="kw">where</span> T <span class="op">&lt;:</span><span class="dt"> AbstractFloat</span></span>
+<span id="cb7-83"><a href="#cb7-83" aria-hidden="true" tabindex="-1"></a>    n, p, q <span class="op">=</span> <span class="fu">size</span>(obs.X, <span class="fl">1</span>), <span class="fu">size</span>(obs.X, <span class="fl">2</span>), <span class="fu">size</span>(obs.Z, <span class="fl">2</span>)</span>
+<span id="cb7-84"><a href="#cb7-84" aria-hidden="true" tabindex="-1"></a>    σ²inv   <span class="op">=</span> <span class="fu">inv</span>(σ²)</span>
+<span id="cb7-85"><a href="#cb7-85" aria-hidden="true" tabindex="-1"></a>    <span class="co">####################</span></span>
+<span id="cb7-86"><a href="#cb7-86" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Evaluate objective</span></span>
+<span id="cb7-87"><a href="#cb7-87" aria-hidden="true" tabindex="-1"></a>    <span class="co">####################</span></span>
+<span id="cb7-88"><a href="#cb7-88" aria-hidden="true" tabindex="-1"></a>    <span class="co"># form the q-by-q matrix: Lt Zt Z L</span></span>
+<span id="cb7-89"><a href="#cb7-89" aria-hidden="true" tabindex="-1"></a>    <span class="fu">copy!</span>(obs.ltztzl, obs.ztz)</span>
+<span id="cb7-90"><a href="#cb7-90" aria-hidden="true" tabindex="-1"></a>    BLAS.<span class="fu">trmm!</span>(<span class="ch">&#39;L&#39;</span>, <span class="ch">&#39;L&#39;</span>, <span class="ch">&#39;T&#39;</span>, <span class="ch">&#39;N&#39;</span>, <span class="fu">T</span>(<span class="fl">1</span>), L, obs.ltztzl) <span class="co"># O(q^3)</span></span>
+<span id="cb7-91"><a href="#cb7-91" aria-hidden="true" tabindex="-1"></a>    BLAS.<span class="fu">trmm!</span>(<span class="ch">&#39;R&#39;</span>, <span class="ch">&#39;L&#39;</span>, <span class="ch">&#39;N&#39;</span>, <span class="ch">&#39;N&#39;</span>, <span class="fu">T</span>(<span class="fl">1</span>), L, obs.ltztzl) <span class="co"># O(q^3)        </span></span>
+<span id="cb7-92"><a href="#cb7-92" aria-hidden="true" tabindex="-1"></a>    <span class="co"># form the q-by-q matrix: M = σ² I + Lt Zt Z L</span></span>
+<span id="cb7-93"><a href="#cb7-93" aria-hidden="true" tabindex="-1"></a>    <span class="fu">copy!</span>(obs.storage_qq, obs.ltztzl)</span>
+<span id="cb7-94"><a href="#cb7-94" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@inbounds</span> <span class="cf">for</span> j <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>q</span>
+<span id="cb7-95"><a href="#cb7-95" aria-hidden="true" tabindex="-1"></a>        obs.storage_qq[j, j] <span class="op">+=</span> σ²</span>
+<span id="cb7-96"><a href="#cb7-96" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb7-97"><a href="#cb7-97" aria-hidden="true" tabindex="-1"></a>    LAPACK.<span class="fu">potrf!</span>(<span class="ch">&#39;U&#39;</span>, obs.storage_qq) <span class="co"># O(q^3)</span></span>
+<span id="cb7-98"><a href="#cb7-98" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Zt * res</span></span>
+<span id="cb7-99"><a href="#cb7-99" aria-hidden="true" tabindex="-1"></a>    updater <span class="op">&amp;&amp;</span> BLAS.<span class="fu">gemv!</span>(<span class="ch">&#39;N&#39;</span>, <span class="fu">T</span>(<span class="op">-</span><span class="fl">1</span>), obs.ztx, β, <span class="fu">T</span>(<span class="fl">1</span>), <span class="fu">copy!</span>(obs.ztr, obs.zty)) <span class="co"># O(pq)</span></span>
+<span id="cb7-100"><a href="#cb7-100" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Lt * (Zt * res)</span></span>
+<span id="cb7-101"><a href="#cb7-101" aria-hidden="true" tabindex="-1"></a>    BLAS.<span class="fu">trmv!</span>(<span class="ch">&#39;L&#39;</span>, <span class="ch">&#39;T&#39;</span>, <span class="ch">&#39;N&#39;</span>, L, <span class="fu">copy!</span>(obs.ltztr, obs.ztr))    <span class="co"># O(q^2)</span></span>
+<span id="cb7-102"><a href="#cb7-102" aria-hidden="true" tabindex="-1"></a>    <span class="co"># storage_q = (Mchol.U&#39;) \ (Lt * (Zt * res))</span></span>
+<span id="cb7-103"><a href="#cb7-103" aria-hidden="true" tabindex="-1"></a>    BLAS.<span class="fu">trsv!</span>(<span class="ch">&#39;U&#39;</span>, <span class="ch">&#39;T&#39;</span>, <span class="ch">&#39;N&#39;</span>, obs.storage_qq, <span class="fu">copy!</span>(obs.storage_q, obs.ltztr)) <span class="co"># O(q^3)</span></span>
+<span id="cb7-104"><a href="#cb7-104" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Xt * res = Xt * y - Xt * X * β</span></span>
+<span id="cb7-105"><a href="#cb7-105" aria-hidden="true" tabindex="-1"></a>    updater <span class="op">&amp;&amp;</span> BLAS.<span class="fu">gemv!</span>(<span class="ch">&#39;N&#39;</span>, <span class="fu">T</span>(<span class="op">-</span><span class="fl">1</span>), obs.xtx, β, <span class="fu">T</span>(<span class="fl">1</span>), <span class="fu">copy!</span>(obs.xtr, obs.xty))</span>
+<span id="cb7-106"><a href="#cb7-106" aria-hidden="true" tabindex="-1"></a>    <span class="co"># l2 norm of residual vector</span></span>
+<span id="cb7-107"><a href="#cb7-107" aria-hidden="true" tabindex="-1"></a>    updater <span class="op">&amp;&amp;</span> (obs.rtr[<span class="fl">1</span>] <span class="op">=</span> obs.yty <span class="op">-</span> <span class="fu">dot</span>(obs.xty, β) <span class="op">-</span> <span class="fu">dot</span>(obs.xtr, β))</span>
+<span id="cb7-108"><a href="#cb7-108" aria-hidden="true" tabindex="-1"></a>    <span class="co"># assemble pieces</span></span>
+<span id="cb7-109"><a href="#cb7-109" aria-hidden="true" tabindex="-1"></a>    logl<span class="op">::</span><span class="dt">T </span><span class="op">=</span> n <span class="op">*</span> <span class="fu">log</span>(<span class="fl">2</span>π) <span class="op">+</span> (n <span class="op">-</span> q) <span class="op">*</span> <span class="fu">log</span>(σ²) <span class="co"># constant term</span></span>
+<span id="cb7-110"><a href="#cb7-110" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@inbounds</span> <span class="cf">for</span> j <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>q <span class="co"># log det term</span></span>
+<span id="cb7-111"><a href="#cb7-111" aria-hidden="true" tabindex="-1"></a>        logl <span class="op">+=</span> <span class="fl">2</span><span class="fu">log</span>(obs.storage_qq[j, j])</span>
+<span id="cb7-112"><a href="#cb7-112" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb7-113"><a href="#cb7-113" aria-hidden="true" tabindex="-1"></a>    qf    <span class="op">=</span> <span class="fu">abs2</span>(<span class="fu">norm</span>(obs.storage_q)) <span class="co"># quadratic form term</span></span>
+<span id="cb7-114"><a href="#cb7-114" aria-hidden="true" tabindex="-1"></a>    logl <span class="op">+=</span> (obs.rtr[<span class="fl">1</span>] <span class="op">-</span> qf) <span class="op">*</span> σ²inv </span>
+<span id="cb7-115"><a href="#cb7-115" aria-hidden="true" tabindex="-1"></a>    logl <span class="op">/=</span> <span class="op">-</span><span class="fl">2</span></span>
+<span id="cb7-116"><a href="#cb7-116" aria-hidden="true" tabindex="-1"></a>    <span class="co">######################################</span></span>
+<span id="cb7-117"><a href="#cb7-117" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Evaluate posterior mean and variance</span></span>
+<span id="cb7-118"><a href="#cb7-118" aria-hidden="true" tabindex="-1"></a>    <span class="co">######################################    </span></span>
+<span id="cb7-119"><a href="#cb7-119" aria-hidden="true" tabindex="-1"></a>    <span class="co"># posterior variance</span></span>
+<span id="cb7-120"><a href="#cb7-120" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="cn">false</span>     <span class="co"># form 1 causing monotonicity issue</span></span>
+<span id="cb7-121"><a href="#cb7-121" aria-hidden="true" tabindex="-1"></a>        <span class="fu">copy!</span>(obs.storage_qq2, L)</span>
+<span id="cb7-122"><a href="#cb7-122" aria-hidden="true" tabindex="-1"></a>        BLAS.<span class="fu">trsm!</span>(<span class="ch">&#39;R&#39;</span>, <span class="ch">&#39;U&#39;</span>, <span class="ch">&#39;N&#39;</span>, <span class="ch">&#39;N&#39;</span>, <span class="fu">T</span>(<span class="fl">1</span>), obs.storage_qq, obs.storage_qq2)  <span class="co"># L Chol(M)^-1</span></span>
+<span id="cb7-123"><a href="#cb7-123" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mul!</span>(obs.storage_qq3, obs.ztz, obs.storage_qq2)  <span class="co"># Z&#39;ZL Chol(M)^-1</span></span>
+<span id="cb7-124"><a href="#cb7-124" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mul!</span>(obs.storage_qq2, Σ, obs.storage_qq3)  <span class="co"># ΣZ&#39;ZL Chol(M)^-1</span></span>
+<span id="cb7-125"><a href="#cb7-125" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mul!</span>(obs.storage_qq3, obs.storage_qq2, obs.storage_qq2<span class="op">&#39;</span>)  <span class="co"># ΣZ&#39;ZLM^-1L&#39;Z&#39;ZΣ</span></span>
+<span id="cb7-126"><a href="#cb7-126" aria-hidden="true" tabindex="-1"></a>        <span class="fu">copy!</span>(obs.νγ, obs.storage_qq3)</span>
+<span id="cb7-127"><a href="#cb7-127" aria-hidden="true" tabindex="-1"></a>        obs.νγ <span class="op">./=</span> σ²</span>
+<span id="cb7-128"><a href="#cb7-128" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mul!</span>(obs.storage_qq2, obs.ztz, Σ)</span>
+<span id="cb7-129"><a href="#cb7-129" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mul!</span>(obs.storage_qq3, Σ, obs.storage_qq2)  <span class="co"># ΣZ&#39;ZΣ</span></span>
+<span id="cb7-130"><a href="#cb7-130" aria-hidden="true" tabindex="-1"></a>        obs.storage_qq3 <span class="op">./=</span> σ²</span>
+<span id="cb7-131"><a href="#cb7-131" aria-hidden="true" tabindex="-1"></a>        obs.νγ <span class="op">.-=</span> obs.storage_qq3</span>
+<span id="cb7-132"><a href="#cb7-132" aria-hidden="true" tabindex="-1"></a>        obs.νγ <span class="op">.+=</span> Σ</span>
+<span id="cb7-133"><a href="#cb7-133" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span> </span>
+<span id="cb7-134"><a href="#cb7-134" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-135"><a href="#cb7-135" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="cn">true</span>     <span class="co"># form 2 works well</span></span>
+<span id="cb7-136"><a href="#cb7-136" aria-hidden="true" tabindex="-1"></a>        <span class="fu">copy!</span>(obs.storage_qq2, L)</span>
+<span id="cb7-137"><a href="#cb7-137" aria-hidden="true" tabindex="-1"></a>        LAPACK.<span class="fu">trtri!</span>(<span class="ch">&#39;L&#39;</span>, <span class="ch">&#39;N&#39;</span>, obs.storage_qq2) <span class="co"># inverse triangular L^-1</span></span>
+<span id="cb7-138"><a href="#cb7-138" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mul!</span>(obs.storage_qq3, </span>
+<span id="cb7-139"><a href="#cb7-139" aria-hidden="true" tabindex="-1"></a>             <span class="fu">UpperTriangular</span>(obs.storage_qq2<span class="op">&#39;</span>),</span>
+<span id="cb7-140"><a href="#cb7-140" aria-hidden="true" tabindex="-1"></a>             <span class="fu">LowerTriangular</span>(obs.storage_qq2))   <span class="co"># Σ^-1</span></span>
+<span id="cb7-141"><a href="#cb7-141" aria-hidden="true" tabindex="-1"></a>        obs.storage_qq2 <span class="op">.=</span> <span class="fl">1</span> <span class="op">/</span> σ² <span class="op">.*</span> obs.ztz <span class="op">.+</span> obs.storage_qq3 <span class="co"># σ^2Z&#39;Z + σ^2Σ^-1</span></span>
+<span id="cb7-142"><a href="#cb7-142" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb7-143"><a href="#cb7-143" aria-hidden="true" tabindex="-1"></a>        LAPACK.<span class="fu">potrf!</span>(<span class="ch">&#39;U&#39;</span>, obs.storage_qq2)  <span class="co"># Cholesky decompsion</span></span>
+<span id="cb7-144"><a href="#cb7-144" aria-hidden="true" tabindex="-1"></a>        <span class="co"># obs.storage_qq3 .= I(q)  # cause memory allocation!!</span></span>
+<span id="cb7-145"><a href="#cb7-145" aria-hidden="true" tabindex="-1"></a>        <span class="co"># BLAS.trsm!(&#39;R&#39;, &#39;U&#39;, &#39;N&#39;, &#39;N&#39;, T(1), obs.storage_qq2, obs.storage_qq3) </span></span>
+<span id="cb7-146"><a href="#cb7-146" aria-hidden="true" tabindex="-1"></a>        <span class="co"># mul!(obs.νγ, obs.storage_qq3, obs.storage_qq3&#39;)</span></span>
+<span id="cb7-147"><a href="#cb7-147" aria-hidden="true" tabindex="-1"></a>        LAPACK.<span class="fu">potri!</span>(<span class="ch">&#39;U&#39;</span>, obs.storage_qq2)  <span class="co"># inverse of PD (upper triangular)</span></span>
+<span id="cb7-148"><a href="#cb7-148" aria-hidden="true" tabindex="-1"></a>        obs.νγ <span class="op">.=</span> obs.storage_qq2</span>
+<span id="cb7-149"><a href="#cb7-149" aria-hidden="true" tabindex="-1"></a>        <span class="pp">@inbounds</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>q, j <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>i</span>
+<span id="cb7-150"><a href="#cb7-150" aria-hidden="true" tabindex="-1"></a>            obs.νγ[i, j] <span class="op">=</span> obs.νγ[j, i]</span>
+<span id="cb7-151"><a href="#cb7-151" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
+<span id="cb7-152"><a href="#cb7-152" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb7-153"><a href="#cb7-153" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-154"><a href="#cb7-154" aria-hidden="true" tabindex="-1"></a>    <span class="co"># posterior mean</span></span>
+<span id="cb7-155"><a href="#cb7-155" aria-hidden="true" tabindex="-1"></a>    <span class="co"># E = σ^-2 (VZ&#39;y - VZ&#39;Xβ)</span></span>
+<span id="cb7-156"><a href="#cb7-156" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mul!</span>(obs.μγ, obs.νγ, obs.zty)</span>
+<span id="cb7-157"><a href="#cb7-157" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mul!</span>(obs.storage_q, obs.ztx, β)</span>
+<span id="cb7-158"><a href="#cb7-158" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mul!</span>(obs.storage_q2, obs.νγ, obs.storage_q)</span>
+<span id="cb7-159"><a href="#cb7-159" aria-hidden="true" tabindex="-1"></a>    obs.μγ <span class="op">.-=</span> obs.storage_q2</span>
+<span id="cb7-160"><a href="#cb7-160" aria-hidden="true" tabindex="-1"></a>    obs.μγ <span class="op">./=</span> σ²</span>
+<span id="cb7-161"><a href="#cb7-161" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-162"><a href="#cb7-162" aria-hidden="true" tabindex="-1"></a>    <span class="co">###################</span></span>
+<span id="cb7-163"><a href="#cb7-163" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Return</span></span>
+<span id="cb7-164"><a href="#cb7-164" aria-hidden="true" tabindex="-1"></a>    <span class="co">###################        </span></span>
+<span id="cb7-165"><a href="#cb7-165" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> logl</span>
+<span id="cb7-166"><a href="#cb7-166" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>logl!</code></pre>
+</div>
 </div>
 <p>It is a good idea to test correctness and efficiency of the single datum objective/posterior mean/var evaluator here. It’s the same test datum as in HW3 and HW6.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Random</span>.<span class="fu">seed!</span>(<span class="fl">257</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># dimension</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>n, p, q <span class="op">=</span> <span class="fl">2000</span>, <span class="fl">5</span>, <span class="fl">3</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># predictors</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> [<span class="fu">ones</span>(n) <span class="fu">randn</span>(n, p <span class="op">-</span> <span class="fl">1</span>)]</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>Z <span class="op">=</span> [<span class="fu">ones</span>(n) <span class="fu">randn</span>(n, q <span class="op">-</span> <span class="fl">1</span>)]</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># parameter values</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>β  <span class="op">=</span> [<span class="fl">2.0</span>; <span class="op">-</span><span class="fl">1.0</span>; <span class="fu">rand</span>(p <span class="op">-</span> <span class="fl">2</span>)]</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>σ² <span class="op">=</span> <span class="fl">1.5</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>Σ  <span class="op">=</span> <span class="fu">fill</span>(<span class="fl">0.1</span>, q, q) <span class="op">+</span> <span class="fl">0.9</span>I <span class="co"># compound symmetry </span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>L  <span class="op">=</span> <span class="fu">Matrix</span>(<span class="fu">cholesky</span>(<span class="fu">Symmetric</span>(Σ)).L)</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co"># generate y</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>y  <span class="op">=</span> X <span class="op">*</span> β <span class="op">+</span> Z <span class="op">*</span> <span class="fu">rand</span>(<span class="fu">MvNormal</span>(Σ)) <span class="op">+</span> <span class="fu">sqrt</span>(σ²) <span class="op">*</span> <span class="fu">randn</span>(n)</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co"># form the LmmObs object</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>obs <span class="op">=</span> <span class="fu">LmmObs</span>(y, X, Z);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="81">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Random</span>.<span class="fu">seed!</span>(<span class="fl">257</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># dimension</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>n, p, q <span class="op">=</span> <span class="fl">2000</span>, <span class="fl">5</span>, <span class="fl">3</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># predictors</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> [<span class="fu">ones</span>(n) <span class="fu">randn</span>(n, p <span class="op">-</span> <span class="fl">1</span>)]</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>Z <span class="op">=</span> [<span class="fu">ones</span>(n) <span class="fu">randn</span>(n, q <span class="op">-</span> <span class="fl">1</span>)]</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co"># parameter values</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>β  <span class="op">=</span> [<span class="fl">2.0</span>; <span class="op">-</span><span class="fl">1.0</span>; <span class="fu">rand</span>(p <span class="op">-</span> <span class="fl">2</span>)]</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>σ² <span class="op">=</span> <span class="fl">1.5</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>Σ  <span class="op">=</span> <span class="fu">fill</span>(<span class="fl">0.1</span>, q, q) <span class="op">+</span> <span class="fl">0.9</span>I <span class="co"># compound symmetry </span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>L  <span class="op">=</span> <span class="fu">Matrix</span>(<span class="fu">cholesky</span>(<span class="fu">Symmetric</span>(Σ)).L)</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co"># generate y</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>y  <span class="op">=</span> X <span class="op">*</span> β <span class="op">+</span> Z <span class="op">*</span> <span class="fu">rand</span>(<span class="fu">MvNormal</span>(Σ)) <span class="op">+</span> <span class="fu">sqrt</span>(σ²) <span class="op">*</span> <span class="fu">randn</span>(n)</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co"># form the LmmObs object</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>obs <span class="op">=</span> <span class="fu">LmmObs</span>(y, X, Z);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="correctness" class="level3" data-number="3.1">
 <h3 data-number="3.1" class="anchored" data-anchor-id="correctness"><span class="header-section-number">3.1</span> Correctness</h3>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> logl <span class="op">=</span> <span class="fu">logl!</span>(obs, β, Σ, L, σ², <span class="cn">true</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> obs.μγ</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> obs.νγ;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="82">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> logl <span class="op">=</span> <span class="fu">logl!</span>(obs, β, Σ, L, σ², <span class="cn">true</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> obs.μγ</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> obs.νγ;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>logl = logl!(obs, β, Σ, L, σ², true) = -3256.1793358058376
+obs.μγ = [0.10608689301332763, -0.2510419060257252, -1.465397940985037]
+obs.νγ = [0.0007494356395786613 -1.2183420464422369e-6 -2.176783682941746e-6; -1.2183420464422369e-6 0.0007542331466357765 2.1553464612468773e-5; -2.176783682941746e-6 2.1553464612468773e-5 0.0007465271344917232]</code></pre>
+</div>
 </div>
 <p>You will lose all 20 points if following statement throws <code>AssertionError</code>.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">abs</span>(logl <span class="op">-</span> (<span class="op">-</span><span class="fl">3256.1793358058258</span>)) <span class="op">&lt;</span> <span class="fl">1e-4</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">norm</span>(obs.μγ <span class="op">-</span> [<span class="fl">0.10608689301333621</span>, </span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>        <span class="op">-</span><span class="fl">0.25104190602577225</span>, <span class="op">-</span><span class="fl">1.4653979409855415</span>]) <span class="op">&lt;</span> <span class="fl">1e-4</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">norm</span>(obs.νγ <span class="op">-</span> [</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>        <span class="fl">0.0007494356395909563</span> <span class="op">-</span><span class="fl">1.2183420093769967e-6</span> <span class="op">-</span><span class="fl">2.176783643112221e-6</span>; </span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        <span class="op">-</span><span class="fl">1.2183420282298223e-6</span> <span class="fl">0.0007542331467601107</span> <span class="fl">2.1553464632686345e-5</span>; </span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>        <span class="op">-</span><span class="fl">2.1767836636008638e-6</span> <span class="fl">2.1553464641863096e-5</span> <span class="fl">0.0007465271342535443</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        ]) <span class="op">&lt;</span> <span class="fl">1e-4</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="83">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">abs</span>(logl <span class="op">-</span> (<span class="op">-</span><span class="fl">3256.1793358058258</span>)) <span class="op">&lt;</span> <span class="fl">1e-4</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">norm</span>(obs.μγ <span class="op">-</span> [<span class="fl">0.10608689301333621</span>, </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>        <span class="op">-</span><span class="fl">0.25104190602577225</span>, <span class="op">-</span><span class="fl">1.4653979409855415</span>]) <span class="op">&lt;</span> <span class="fl">1e-4</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">norm</span>(obs.νγ <span class="op">-</span> [</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>        <span class="fl">0.0007494356395909563</span> <span class="op">-</span><span class="fl">1.2183420093769967e-6</span> <span class="op">-</span><span class="fl">2.176783643112221e-6</span>; </span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>        <span class="op">-</span><span class="fl">1.2183420282298223e-6</span> <span class="fl">0.0007542331467601107</span> <span class="fl">2.1553464632686345e-5</span>; </span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>        <span class="op">-</span><span class="fl">2.1767836636008638e-6</span> <span class="fl">2.1553464641863096e-5</span> <span class="fl">0.0007465271342535443</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>        ]) <span class="op">&lt;</span> <span class="fl">1e-4</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="efficiency" class="level3" data-number="3.2">
 <h3 data-number="3.2" class="anchored" data-anchor-id="efficiency"><span class="header-section-number">3.2</span> Efficiency</h3>
 <p>Benchmark for efficiency.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>bm_obj <span class="op">=</span> <span class="pp">@benchmark</span> <span class="fu">logl!</span>(<span class="op">$</span>obs, <span class="op">$</span>β, <span class="op">$</span>Σ, <span class="op">$</span>L, <span class="op">$</span>σ², <span class="cn">true</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="85">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>bm_obj <span class="op">=</span> <span class="pp">@benchmark</span> <span class="fu">logl!</span>(<span class="op">$</span>obs, <span class="op">$</span>β, <span class="op">$</span>Σ, <span class="op">$</span>L, <span class="op">$</span>σ², <span class="cn">true</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div class="ansi-escaped-output">
+<pre>BenchmarkTools.Trial: 10000 samples with 10 evaluations.
+ Range <span class="ansi-bright-black-fg">(</span><span class="ansi-cyan-fg ansi-bold">min</span> … <span class="ansi-magenta-fg">max</span><span class="ansi-bright-black-fg">):  </span><span class="ansi-cyan-fg ansi-bold">1.083 μs</span> … <span class="ansi-magenta-fg">  9.613 μs</span>  <span class="ansi-bright-black-fg">┊</span> GC <span class="ansi-bright-black-fg">(</span>min … max<span class="ansi-bright-black-fg">): </span>0.00% … 0.00%
+ Time  <span class="ansi-bright-black-fg">(</span><span class="ansi-blue-fg ansi-bold">median</span><span class="ansi-bright-black-fg">):     </span><span class="ansi-blue-fg ansi-bold">1.167 μs               </span><span class="ansi-bright-black-fg">┊</span> GC <span class="ansi-bright-black-fg">(</span>median<span class="ansi-bright-black-fg">):    </span>0.00%
+ Time  <span class="ansi-bright-black-fg">(</span><span class="ansi-green-fg ansi-bold">mean</span> ± <span class="ansi-green-fg">σ</span><span class="ansi-bright-black-fg">):   </span><span class="ansi-green-fg ansi-bold">1.176 μs</span> ± <span class="ansi-green-fg">176.752 ns</span>  <span class="ansi-bright-black-fg">┊</span> GC <span class="ansi-bright-black-fg">(</span>mean ± σ<span class="ansi-bright-black-fg">):  </span>0.00% ± 0.00%
+        ▁▅ ▁   ▂ ▃▆ ▂▂<span class="ansi-blue-fg"> </span> <span class="ansi-green-fg">▃</span> ▃█ ▁▄                                
+  ▁▁▂▃▇▅██▇██▄▅█▆█████<span class="ansi-blue-fg">▅</span>▇<span class="ansi-green-fg">█</span>▇██▇██▅▇█▄▅▆▄▃▃▂▂▂▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁ ▃
+  1.08 μs<span class="ansi-bright-black-fg">         Histogram: frequency by time</span>        1.33 μs <span class="ansi-bold">&lt;</span>
+ Memory estimate<span class="ansi-bright-black-fg">: </span><span class="ansi-yellow-fg">0 bytes</span>, allocs estimate<span class="ansi-bright-black-fg">: </span><span class="ansi-yellow-fg">0</span>.</pre>
+</div>
+</div>
 </div>
 <p>My median runt time is 800ns. You will get full credit if the median run time is within 10μs. The points you will get are</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">clamp</span>(<span class="fl">10</span> <span class="op">/</span> (<span class="fu">median</span>(bm_obj).time <span class="op">/</span> <span class="fl">1e3</span>) <span class="op">*</span> <span class="fl">10</span>, <span class="fl">0</span>, <span class="fl">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="86">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">clamp</span>(<span class="fl">10</span> <span class="op">/</span> (<span class="fu">median</span>(bm_obj).time <span class="op">/</span> <span class="fl">1e3</span>) <span class="op">*</span> <span class="fl">10</span>, <span class="fl">0</span>, <span class="fl">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>10.0</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># # check for type stability</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># @code_warntype logl!(obs, β, Σ, L, σ²)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># # check for type stability</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># @code_warntype logl!(obs, β, Σ, L, σ²)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># using Profile</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Profile.clear()</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># @profile for i in 1:10000; logl!(obs, β, Σ, L, σ²); end</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Profile.print(format=:flat)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># using Profile</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Profile.clear()</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># @profile for i in 1:10000; logl!(obs, β, Σ, L, σ²); end</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Profile.print(format=:flat)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
 <section id="q4.-lmmmodel-type" class="level2" data-number="4">
 <h2 data-number="4" class="anchored" data-anchor-id="q4.-lmmmodel-type"><span class="header-section-number">4</span> Q4. LmmModel type</h2>
 <p>We modify the <code>LmmModel</code> type in HW6 to hold all data points, model parameters, and intermediate arrays.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define a type that holds LMM model (data + parameters)</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> LmmModel{T <span class="op">&lt;:</span><span class="dt"> AbstractFloat</span>}</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># data</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    data <span class="op">::</span><span class="dt"> Vector{LmmObs{T}}</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># parameters</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    β      <span class="op">::</span><span class="dt"> Vector{T}</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    Σ      <span class="op">::</span><span class="dt"> Matrix{T}</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    L      <span class="op">::</span><span class="dt"> Matrix{T}</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    σ²     <span class="op">::</span><span class="dt"> Vector{T}    </span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># TODO: add whatever intermediate arrays you may want to pre-allocate</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    xty    <span class="op">::</span><span class="dt"> Vector{T}</span></span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    xtr    <span class="op">::</span><span class="dt"> Vector{T}</span></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    ztr2   <span class="op">::</span><span class="dt"> Vector{T}</span></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    xtxinv <span class="op">::</span><span class="dt"> Matrix{T}</span></span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    ztz2   <span class="op">::</span><span class="dt"> Matrix{T}</span></span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;&quot;&quot;</span></span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="st">    LmmModel(data::Vector{LmmObs})</span></span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="st">Create an LMM model that contains data and parameters.</span></span>
-<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;&quot;&quot;</span></span>
-<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">LmmModel</span>(obsvec<span class="op">::</span><span class="dt">Vector{LmmObs{T}}</span>) <span class="kw">where</span> T <span class="op">&lt;:</span><span class="dt"> AbstractFloat</span></span>
-<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># dims</span></span>
-<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    p      <span class="op">=</span> <span class="fu">size</span>(obsvec[<span class="fl">1</span>].X, <span class="fl">2</span>)</span>
-<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>    q      <span class="op">=</span> <span class="fu">size</span>(obsvec[<span class="fl">1</span>].Z, <span class="fl">2</span>)</span>
-<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># parameters</span></span>
-<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>    β      <span class="op">=</span> <span class="fu">Vector</span><span class="dt">{T}</span>(<span class="cn">undef</span>, p)</span>
-<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>    Σ      <span class="op">=</span> <span class="fu">Matrix</span><span class="dt">{T}</span>(<span class="cn">undef</span>, q, q)</span>
-<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>    L      <span class="op">=</span> <span class="fu">Matrix</span><span class="dt">{T}</span>(<span class="cn">undef</span>, q, q)</span>
-<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>    σ²     <span class="op">=</span> <span class="fu">Vector</span><span class="dt">{T}</span>(<span class="cn">undef</span>, <span class="fl">1</span>)    </span>
-<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>    <span class="co"># intermediate arrays</span></span>
-<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>    xty    <span class="op">=</span> <span class="fu">zeros</span>(T, p)</span>
-<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>    xtr    <span class="op">=</span> <span class="fu">similar</span>(xty)</span>
-<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>    ztr2   <span class="op">=</span> <span class="fu">Vector</span><span class="dt">{T}</span>(<span class="cn">undef</span>, <span class="fu">abs2</span>(q))</span>
-<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>    xtxinv <span class="op">=</span> <span class="fu">zeros</span>(T, p, p)</span>
-<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>    <span class="co"># pre-calculate \sum_i Xi^T Xi and \sum_i Xi^T y_i</span></span>
-<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@inbounds</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="fu">eachindex</span>(obsvec)</span>
-<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>        obs <span class="op">=</span> obsvec[i]</span>
-<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>        BLAS.<span class="fu">axpy!</span>(<span class="fu">T</span>(<span class="fl">1</span>), obs.xtx, xtxinv)</span>
-<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>        BLAS.<span class="fu">axpy!</span>(<span class="fu">T</span>(<span class="fl">1</span>), obs.xty, xty)</span>
-<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a>    <span class="co"># invert X&#39;X</span></span>
-<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a>    LAPACK.<span class="fu">potrf!</span>(<span class="ch">&#39;U&#39;</span>, xtxinv)</span>
-<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a>    LAPACK.<span class="fu">potri!</span>(<span class="ch">&#39;U&#39;</span>, xtxinv)</span>
-<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a>    <span class="bu">LinearAlgebra</span>.<span class="fu">copytri!</span>(xtxinv, <span class="ch">&#39;U&#39;</span>)</span>
-<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a>    ztz2   <span class="op">=</span> <span class="fu">Matrix</span><span class="dt">{T}</span>(<span class="cn">undef</span>, <span class="fu">abs2</span>(q), <span class="fu">abs2</span>(q))</span>
-<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a>    <span class="fu">LmmModel</span>(obsvec, β, Σ, L, σ², xty, xtr, ztr2, xtxinv, ztz2)</span>
-<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="87">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define a type that holds LMM model (data + parameters)</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> LmmModel{T <span class="op">&lt;:</span><span class="dt"> AbstractFloat</span>}</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># data</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    data <span class="op">::</span><span class="dt"> Vector{LmmObs{T}}</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># parameters</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    β      <span class="op">::</span><span class="dt"> Vector{T}</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    Σ      <span class="op">::</span><span class="dt"> Matrix{T}</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    L      <span class="op">::</span><span class="dt"> Matrix{T}</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    σ²     <span class="op">::</span><span class="dt"> Vector{T}    </span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># TODO: add whatever intermediate arrays you may want to pre-allocate</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    xty    <span class="op">::</span><span class="dt"> Vector{T}</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>    xtr    <span class="op">::</span><span class="dt"> Vector{T}</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    ztr2   <span class="op">::</span><span class="dt"> Vector{T}</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>    xtxinv <span class="op">::</span><span class="dt"> Matrix{T}</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>    ztz2   <span class="op">::</span><span class="dt"> Matrix{T}</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>    storage_p <span class="op">::</span><span class="dt"> Vector{T}</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;&quot;&quot;</span></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="st">    LmmModel(data::Vector{LmmObs})</span></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a><span class="st">Create an LMM model that contains data and parameters.</span></span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;&quot;&quot;</span></span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">LmmModel</span>(obsvec<span class="op">::</span><span class="dt">Vector{LmmObs{T}}</span>) <span class="kw">where</span> T <span class="op">&lt;:</span><span class="dt"> AbstractFloat</span></span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># dims</span></span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>    p      <span class="op">=</span> <span class="fu">size</span>(obsvec[<span class="fl">1</span>].X, <span class="fl">2</span>)</span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>    q      <span class="op">=</span> <span class="fu">size</span>(obsvec[<span class="fl">1</span>].Z, <span class="fl">2</span>)</span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># parameters</span></span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>    β      <span class="op">=</span> <span class="fu">Vector</span><span class="dt">{T}</span>(<span class="cn">undef</span>, p)</span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>    Σ      <span class="op">=</span> <span class="fu">Matrix</span><span class="dt">{T}</span>(<span class="cn">undef</span>, q, q)</span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>    L      <span class="op">=</span> <span class="fu">Matrix</span><span class="dt">{T}</span>(<span class="cn">undef</span>, q, q)</span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>    σ²     <span class="op">=</span> <span class="fu">Vector</span><span class="dt">{T}</span>(<span class="cn">undef</span>, <span class="fl">1</span>)    </span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># intermediate arrays</span></span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a>    xty    <span class="op">=</span> <span class="fu">zeros</span>(T, p)</span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a>    xtr    <span class="op">=</span> <span class="fu">similar</span>(xty)</span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>    ztr2   <span class="op">=</span> <span class="fu">Vector</span><span class="dt">{T}</span>(<span class="cn">undef</span>, <span class="fu">abs2</span>(q))</span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a>    xtxinv <span class="op">=</span> <span class="fu">zeros</span>(T, p, p)</span>
+<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a>    storage_p <span class="op">=</span> <span class="fu">Vector</span><span class="dt">{T}</span>(<span class="cn">undef</span>, p)</span>
+<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a>    <span class="co"># pre-calculate \sum_i Xi^T Xi and \sum_i Xi^T y_i</span></span>
+<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@inbounds</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="fu">eachindex</span>(obsvec)</span>
+<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a>        obs <span class="op">=</span> obsvec[i]</span>
+<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a>        BLAS.<span class="fu">axpy!</span>(<span class="fu">T</span>(<span class="fl">1</span>), obs.xtx, xtxinv)</span>
+<span id="cb18-43"><a href="#cb18-43" aria-hidden="true" tabindex="-1"></a>        BLAS.<span class="fu">axpy!</span>(<span class="fu">T</span>(<span class="fl">1</span>), obs.xty, xty)</span>
+<span id="cb18-44"><a href="#cb18-44" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb18-45"><a href="#cb18-45" aria-hidden="true" tabindex="-1"></a>    <span class="co"># invert X&#39;X</span></span>
+<span id="cb18-46"><a href="#cb18-46" aria-hidden="true" tabindex="-1"></a>    LAPACK.<span class="fu">potrf!</span>(<span class="ch">&#39;U&#39;</span>, xtxinv)</span>
+<span id="cb18-47"><a href="#cb18-47" aria-hidden="true" tabindex="-1"></a>    LAPACK.<span class="fu">potri!</span>(<span class="ch">&#39;U&#39;</span>, xtxinv)</span>
+<span id="cb18-48"><a href="#cb18-48" aria-hidden="true" tabindex="-1"></a>    <span class="bu">LinearAlgebra</span>.<span class="fu">copytri!</span>(xtxinv, <span class="ch">&#39;U&#39;</span>)</span>
+<span id="cb18-49"><a href="#cb18-49" aria-hidden="true" tabindex="-1"></a>    ztz2   <span class="op">=</span> <span class="fu">Matrix</span><span class="dt">{T}</span>(<span class="cn">undef</span>, <span class="fu">abs2</span>(q), <span class="fu">abs2</span>(q))</span>
+<span id="cb18-50"><a href="#cb18-50" aria-hidden="true" tabindex="-1"></a>    <span class="fu">LmmModel</span>(obsvec, β, Σ, L, σ², xty, xtr, ztr2, xtxinv, ztz2, </span>
+<span id="cb18-51"><a href="#cb18-51" aria-hidden="true" tabindex="-1"></a>             storage_p)</span>
+<span id="cb18-52"><a href="#cb18-52" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>LmmModel</code></pre>
+</div>
 </div>
 </section>
 <section id="q5.-implement-em-update" class="level2" data-number="5">
 <h2 data-number="5" class="anchored" data-anchor-id="q5.-implement-em-update"><span class="header-section-number">5</span> Q5. Implement EM update</h2>
 <p>Let’s write the key function <code>update_em!</code> that performs one iteration of EM update.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;&quot;&quot;</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="st">    update_em!(m::LmmModel, updater::Bool = false)</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="st">Perform one iteration of EM update. It returns the log-likelihood calculated </span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="st">from input `m.β`, `m.Σ`, `m.L`, and `m.σ²`. These fields are then overwritten </span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="st">by the next EM iterate. The fields `m.data[i].xtr`, `m.data[i].ztr`, and </span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="st">`m.data[i].rtr` are updated according to the resultant `m.β`. If `updater==true`, </span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="st">the function first updates `m.data[i].xtr`, `m.data[i].ztr`, and </span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="st">`m.data[i].rtr` according to `m.β`. If `updater==false`, it assumes these fields </span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="st">are pre-computed.</span></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;&quot;&quot;</span></span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">update_em!</span>(m<span class="op">::</span><span class="dt">LmmModel{T}</span>, updater<span class="op">::</span><span class="dt">Bool </span><span class="op">=</span> <span class="cn">false</span>) <span class="kw">where</span> T <span class="op">&lt;:</span><span class="dt"> AbstractFloat</span></span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    logl <span class="op">=</span> <span class="fu">zero</span>(T)</span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># TODO: update m.β</span></span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># TODO: update m.data[i].ztr, m.data[i].xtr, m.data[i].rtr</span></span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># TODO: update m.σ²</span></span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># update m.Σ and m.L</span></span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># return log-likelihood at input parameter values</span></span>
-<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>    logl</span>
-<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="88">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;&quot;&quot;</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="st">    update_em!(m::LmmModel, updater::Bool = false)</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="st">Perform one iteration of EM update. It returns the log-likelihood calculated </span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="st">from input `m.β`, `m.Σ`, `m.L`, and `m.σ²`. These fields are then overwritten </span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="st">by the next EM iterate. The fields `m.data[i].xtr`, `m.data[i].ztr`, and </span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="st">`m.data[i]` are updated according to the resultant `m.β`. If `updater==true`, </span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="st">the function first updates `m.data[i].xtr`, `m.data[i].ztr`, and </span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="st">`m.data[i].rtr` according to `m.β`. If `updater==false`, it assumes these fields </span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="st">are pre-computed.</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;&quot;&quot;</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">update_em!</span>(m<span class="op">::</span><span class="dt">LmmModel{T}</span>, updater<span class="op">::</span><span class="dt">Bool </span><span class="op">=</span> <span class="cn">false</span>) <span class="kw">where</span> T <span class="op">&lt;:</span><span class="dt"> AbstractFloat</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    logl <span class="op">=</span> <span class="fu">zero</span>(T)</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># calculate log-likelihood</span></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@inbounds</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="fu">eachindex</span>(m.data)</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>        obs <span class="op">=</span> m.data[i]</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>        logl <span class="op">+=</span> <span class="fu">logl!</span>(obs, m.β, m.Σ, m.L, m.σ²[<span class="fl">1</span>], updater)</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># TODO: update m.β  </span></span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fill!</span>(m.storage_p, <span class="fu">zero</span>(T))</span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@inbounds</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="fu">eachindex</span>(m.data)</span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>        obs <span class="op">=</span> m.data[i]</span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mul!</span>(obs.storage_p, obs.ztx<span class="op">&#39;</span>, obs.μγ)  <span class="co"># Zt * μγ</span></span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>        BLAS.<span class="fu">axpy!</span>(<span class="fu">T</span>(<span class="fl">1</span>), obs.storage_p, m.storage_p) <span class="co"># sum XtZ * μγ</span></span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>    m.storage_p <span class="op">.=</span> m.xty <span class="op">.-</span> m.storage_p</span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mul!</span>(m.β, m.xtxinv, m.storage_p) </span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># TODO: update m.data[i].ztr, m.data[i].xtr, m.data[i].rtr</span></span>
+<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@inbounds</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="fu">eachindex</span>(m.data)</span>
+<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>        obs <span class="op">=</span> m.data[i]</span>
+<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Zt * res</span></span>
+<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a>        BLAS.<span class="fu">gemv!</span>(<span class="ch">&#39;N&#39;</span>, <span class="fu">T</span>(<span class="op">-</span><span class="fl">1</span>), obs.ztx, m.β, <span class="fu">T</span>(<span class="fl">1</span>), <span class="fu">copy!</span>(obs.ztr, obs.zty)) </span>
+<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Xt * res = Xt * y - Xt * X * β</span></span>
+<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a>        BLAS.<span class="fu">gemv!</span>(<span class="ch">&#39;N&#39;</span>, <span class="fu">T</span>(<span class="op">-</span><span class="fl">1</span>), obs.xtx, m.β, <span class="fu">T</span>(<span class="fl">1</span>), <span class="fu">copy!</span>(obs.xtr, obs.xty))</span>
+<span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a>        <span class="co"># l2 norm of residual vector</span></span>
+<span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a>        obs.rtr[<span class="fl">1</span>] <span class="op">=</span> obs.yty <span class="op">-</span> <span class="fu">dot</span>(obs.xty, m.β) <span class="op">-</span> <span class="fu">dot</span>(obs.xtr, m.β)</span>
+<span id="cb20-39"><a href="#cb20-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb20-40"><a href="#cb20-40" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb20-41"><a href="#cb20-41" aria-hidden="true" tabindex="-1"></a>    <span class="co"># TODO: update m.σ²</span></span>
+<span id="cb20-42"><a href="#cb20-42" aria-hidden="true" tabindex="-1"></a>    m.σ²[<span class="fl">1</span>] <span class="op">=</span> <span class="fu">zero</span>(T)</span>
+<span id="cb20-43"><a href="#cb20-43" aria-hidden="true" tabindex="-1"></a>    N <span class="op">=</span> <span class="fu">zero</span>(T)</span>
+<span id="cb20-44"><a href="#cb20-44" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@inbounds</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="fu">eachindex</span>(m.data)</span>
+<span id="cb20-45"><a href="#cb20-45" aria-hidden="true" tabindex="-1"></a>        obs <span class="op">=</span> m.data[i]</span>
+<span id="cb20-46"><a href="#cb20-46" aria-hidden="true" tabindex="-1"></a>        N <span class="op">+=</span> <span class="fu">size</span>(obs.X, <span class="fl">1</span>)  <span class="co"># total sample size</span></span>
+<span id="cb20-47"><a href="#cb20-47" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mul!</span>(obs.storage_qq, obs.ztz, obs.νγ)  <span class="co"># Z&#39;ZV</span></span>
+<span id="cb20-48"><a href="#cb20-48" aria-hidden="true" tabindex="-1"></a>        m.σ²[<span class="fl">1</span>] <span class="op">+=</span> <span class="fu">tr</span>(obs.storage_qq)  <span class="co"># tr(Z&#39;ZV)</span></span>
+<span id="cb20-49"><a href="#cb20-49" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mul!</span>(obs.storage_q, obs.ztz, obs.μγ)  <span class="co"># Z&#39;Zμ</span></span>
+<span id="cb20-50"><a href="#cb20-50" aria-hidden="true" tabindex="-1"></a>        m.σ²[<span class="fl">1</span>] <span class="op">+=</span> <span class="fu">dot</span>(obs.storage_q, obs.μγ)  <span class="co"># μ&#39;Z&#39;Zμ</span></span>
+<span id="cb20-51"><a href="#cb20-51" aria-hidden="true" tabindex="-1"></a>        m.σ²[<span class="fl">1</span>] <span class="op">-=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fu">dot</span>(obs.ztr, obs.μγ)  <span class="co"># -2r&#39;Zμ</span></span>
+<span id="cb20-52"><a href="#cb20-52" aria-hidden="true" tabindex="-1"></a>        m.σ²[<span class="fl">1</span>] <span class="op">+=</span> obs.rtr[<span class="fl">1</span>]</span>
+<span id="cb20-53"><a href="#cb20-53" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb20-54"><a href="#cb20-54" aria-hidden="true" tabindex="-1"></a>    m.σ²[<span class="fl">1</span>] <span class="op">/=</span> N</span>
+<span id="cb20-55"><a href="#cb20-55" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb20-56"><a href="#cb20-56" aria-hidden="true" tabindex="-1"></a>    <span class="co"># update m.Σ and m.L</span></span>
+<span id="cb20-57"><a href="#cb20-57" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fill!</span>(m.Σ, <span class="fu">zero</span>(T))</span>
+<span id="cb20-58"><a href="#cb20-58" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@inbounds</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="fu">eachindex</span>(m.data)</span>
+<span id="cb20-59"><a href="#cb20-59" aria-hidden="true" tabindex="-1"></a>        obs <span class="op">=</span> m.data[i]</span>
+<span id="cb20-60"><a href="#cb20-60" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mul!</span>(obs.storage_qq, obs.μγ, obs.μγ<span class="ch">&#39;)  # μμ&#39;</span></span>
+<span id="cb20-61"><a href="#cb20-61" aria-hidden="true" tabindex="-1"></a>        obs.storage_qq <span class="op">.+=</span> obs.νγ  <span class="co"># μμ&#39; + V</span></span>
+<span id="cb20-62"><a href="#cb20-62" aria-hidden="true" tabindex="-1"></a>        m.Σ <span class="op">.+=</span> obs.storage_qq</span>
+<span id="cb20-63"><a href="#cb20-63" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb20-64"><a href="#cb20-64" aria-hidden="true" tabindex="-1"></a>    m.Σ <span class="op">./=</span> <span class="fu">length</span>(m.data)</span>
+<span id="cb20-65"><a href="#cb20-65" aria-hidden="true" tabindex="-1"></a>    <span class="fu">copy!</span>(m.L, m.Σ)</span>
+<span id="cb20-66"><a href="#cb20-66" aria-hidden="true" tabindex="-1"></a>    LAPACK.<span class="fu">potrf!</span>(<span class="ch">&#39;L&#39;</span>, m.L)</span>
+<span id="cb20-67"><a href="#cb20-67" aria-hidden="true" tabindex="-1"></a>    m.L <span class="op">.=</span> <span class="fu">LowerTriangular</span>(m.L)</span>
+<span id="cb20-68"><a href="#cb20-68" aria-hidden="true" tabindex="-1"></a>    <span class="co"># m.L .= Matrix(cholesky(Symmetric(m.Σ)).L) # not work for some reason</span></span>
+<span id="cb20-69"><a href="#cb20-69" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb20-70"><a href="#cb20-70" aria-hidden="true" tabindex="-1"></a>    logl</span>
+<span id="cb20-71"><a href="#cb20-71" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>update_em!</code></pre>
+</div>
 </div>
 </section>
 <section id="q6.-30-pts-test-data" class="level2" data-number="6">
 <h2 data-number="6" class="anchored" data-anchor-id="q6.-30-pts-test-data"><span class="header-section-number">6</span> Q6. (30 pts) Test data</h2>
 <p>Let’s generate a synthetic longitudinal data set (same as HW6) to test our algorithm.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Random</span>.<span class="fu">seed!</span>(<span class="fl">257</span>)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># dimension</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>m      <span class="op">=</span> <span class="fl">1000</span> <span class="co"># number of individuals</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>ns     <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">1500</span><span class="op">:</span><span class="fl">2000</span>, m) <span class="co"># numbers of observations per individual</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>p      <span class="op">=</span> <span class="fl">5</span> <span class="co"># number of fixed effects, including intercept</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>q      <span class="op">=</span> <span class="fl">3</span> <span class="co"># number of random effects, including intercept</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>obsvec <span class="op">=</span> <span class="fu">Vector</span><span class="dt">{LmmObs{Float64}}</span>(<span class="cn">undef</span>, m)</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co"># true parameter values</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>βtrue  <span class="op">=</span> [<span class="fl">0.1</span>; <span class="fl">6.5</span>; <span class="op">-</span><span class="fl">3.5</span>; <span class="fl">1.0</span>; <span class="fl">5</span>]</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>σ²true <span class="op">=</span> <span class="fl">1.5</span></span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>σtrue  <span class="op">=</span> <span class="fu">sqrt</span>(σ²true)</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>Σtrue  <span class="op">=</span> <span class="fu">Matrix</span>(<span class="fu">Diagonal</span>([<span class="fl">2.0</span>; <span class="fl">1.2</span>; <span class="fl">1.0</span>]))</span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>Ltrue  <span class="op">=</span> <span class="fu">Matrix</span>(<span class="fu">cholesky</span>(<span class="fu">Symmetric</span>(Σtrue)).L)</span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co"># generate data</span></span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>m</span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># first column intercept, remaining entries iid std normal</span></span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> <span class="fu">Matrix</span><span class="dt">{Float64}</span>(<span class="cn">undef</span>, ns[i], p)</span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    X[<span class="op">:</span>, <span class="fl">1</span>] <span class="op">.=</span> <span class="fl">1</span></span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@views</span> Distributions.<span class="fu">rand!</span>(<span class="fu">Normal</span>(), X[<span class="op">:</span>, <span class="fl">2</span><span class="op">:</span>p])</span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># first column intercept, remaining entries iid std normal</span></span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>    Z <span class="op">=</span> <span class="fu">Matrix</span><span class="dt">{Float64}</span>(<span class="cn">undef</span>, ns[i], q)</span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>    Z[<span class="op">:</span>, <span class="fl">1</span>] <span class="op">.=</span> <span class="fl">1</span></span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@views</span> Distributions.<span class="fu">rand!</span>(<span class="fu">Normal</span>(), Z[<span class="op">:</span>, <span class="fl">2</span><span class="op">:</span>q])</span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># generate y</span></span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> X <span class="op">*</span> βtrue <span class="op">.+</span> Z <span class="op">*</span> (Ltrue <span class="op">*</span> <span class="fu">randn</span>(q)) <span class="op">.+</span> σtrue <span class="op">*</span> <span class="fu">randn</span>(ns[i])</span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># form a LmmObs instance</span></span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>    obsvec[i] <span class="op">=</span> <span class="fu">LmmObs</span>(y, X, Z)</span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
-<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a><span class="co"># form a LmmModel instance</span></span>
-<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>lmm <span class="op">=</span> <span class="fu">LmmModel</span>(obsvec);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="89">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Random</span>.<span class="fu">seed!</span>(<span class="fl">257</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co"># dimension</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>m      <span class="op">=</span> <span class="fl">1000</span> <span class="co"># number of individuals</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>ns     <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">1500</span><span class="op">:</span><span class="fl">2000</span>, m) <span class="co"># numbers of observations per individual</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>p      <span class="op">=</span> <span class="fl">5</span> <span class="co"># number of fixed effects, including intercept</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>q      <span class="op">=</span> <span class="fl">3</span> <span class="co"># number of random effects, including intercept</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>obsvec <span class="op">=</span> <span class="fu">Vector</span><span class="dt">{LmmObs{Float64}}</span>(<span class="cn">undef</span>, m)</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="co"># true parameter values</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>βtrue  <span class="op">=</span> [<span class="fl">0.1</span>; <span class="fl">6.5</span>; <span class="op">-</span><span class="fl">3.5</span>; <span class="fl">1.0</span>; <span class="fl">5</span>]</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>σ²true <span class="op">=</span> <span class="fl">1.5</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>σtrue  <span class="op">=</span> <span class="fu">sqrt</span>(σ²true)</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>Σtrue  <span class="op">=</span> <span class="fu">Matrix</span>(<span class="fu">Diagonal</span>([<span class="fl">2.0</span>; <span class="fl">1.2</span>; <span class="fl">1.0</span>]))</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>Ltrue  <span class="op">=</span> <span class="fu">Matrix</span>(<span class="fu">cholesky</span>(<span class="fu">Symmetric</span>(Σtrue)).L)</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="co"># generate data</span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>m</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># first column intercept, remaining entries iid std normal</span></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> <span class="fu">Matrix</span><span class="dt">{Float64}</span>(<span class="cn">undef</span>, ns[i], p)</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>    X[<span class="op">:</span>, <span class="fl">1</span>] <span class="op">.=</span> <span class="fl">1</span></span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@views</span> Distributions.<span class="fu">rand!</span>(<span class="fu">Normal</span>(), X[<span class="op">:</span>, <span class="fl">2</span><span class="op">:</span>p])</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># first column intercept, remaining entries iid std normal</span></span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>    Z <span class="op">=</span> <span class="fu">Matrix</span><span class="dt">{Float64}</span>(<span class="cn">undef</span>, ns[i], q)</span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>    Z[<span class="op">:</span>, <span class="fl">1</span>] <span class="op">.=</span> <span class="fl">1</span></span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@views</span> Distributions.<span class="fu">rand!</span>(<span class="fu">Normal</span>(), Z[<span class="op">:</span>, <span class="fl">2</span><span class="op">:</span>q])</span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># generate y</span></span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> X <span class="op">*</span> βtrue <span class="op">.+</span> Z <span class="op">*</span> (Ltrue <span class="op">*</span> <span class="fu">randn</span>(q)) <span class="op">.+</span> σtrue <span class="op">*</span> <span class="fu">randn</span>(ns[i])</span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># form a LmmObs instance</span></span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>    obsvec[i] <span class="op">=</span> <span class="fu">LmmObs</span>(y, X, Z)</span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a><span class="co"># form a LmmModel instance</span></span>
+<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a>lmm <span class="op">=</span> <span class="fu">LmmModel</span>(obsvec);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="correctness-1" class="level3" data-number="6.1">
 <h3 data-number="6.1" class="anchored" data-anchor-id="correctness-1"><span class="header-section-number">6.1</span> Correctness</h3>
 <p>Evaluate log-likelihood and gradient at the true parameter values.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">copy!</span>(lmm.β, βtrue)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">copy!</span>(lmm.Σ, Σtrue)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">copy!</span>(lmm.L, Ltrue)</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>lmm.σ²[<span class="fl">1</span>] <span class="op">=</span> σ²true</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> obj1 <span class="op">=</span> <span class="fu">update_em!</span>(lmm, <span class="cn">true</span>)</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> lmm.β</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> lmm.Σ</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> lmm.L</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> lmm.σ²</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>()</span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> obj2 <span class="op">=</span> <span class="fu">update_em!</span>(lmm, <span class="cn">false</span>)</span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> lmm.β</span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> lmm.Σ</span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> lmm.L</span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> lmm.σ²</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="90">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">copy!</span>(lmm.β, βtrue)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">copy!</span>(lmm.Σ, Σtrue)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">copy!</span>(lmm.L, Ltrue)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>lmm.σ²[<span class="fl">1</span>] <span class="op">=</span> σ²true</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> obj1 <span class="op">=</span> <span class="fu">update_em!</span>(lmm, <span class="cn">true</span>)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> lmm.β</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> lmm.Σ</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> lmm.L</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> lmm.σ²</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>()</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> obj2 <span class="op">=</span> <span class="fu">update_em!</span>(lmm, <span class="cn">false</span>)</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> lmm.β</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> lmm.Σ</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> lmm.L</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> lmm.σ²</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>obj1 = update_em!(lmm, true) = -2.8400684383699736e6
+lmm.β = [0.10003613673625013, 6.500382871080181, -3.499864634211224, 0.9997124657606651, 4.999230851463544]
+lmm.Σ = [1.9903882760455316 0.06862095707037434 0.053472901794726614; 0.06862095707037434 1.2813220461216903 -0.09044913324906328; 0.053472901794726614 -0.09044913324906328 0.9435400745724166]
+lmm.L = [1.4108112120498375 0.0 0.0; 0.04863936186803587 1.1309094829378523 0.0; 0.037902237619045556 -0.0816092492747239 0.9671832429217857]
+lmm.σ² = [1.4987367279243704]
+
+obj2 = update_em!(lmm, false) = -2.8400604605420595e6
+lmm.β = [0.10007136571174427, 6.500383550631511, -3.4998642980415435, 0.9997119269497639, 4.999229480978786]
+lmm.Σ = [1.9903775380783681 0.06870107683947126 0.05354351750443929; 0.06870107683947126 1.281440921371172 -0.09059223997463756; 0.05354351750443929 -0.09059223997463756 0.9434431688085722]
+lmm.L = [1.4108074064443978 0.0 0.0; 0.04869628308276029 1.1309595896339955 0.0; 0.037952393260666885 -0.08173623647370377 0.9671204538740118]
+lmm.σ² = [1.498734554416028]</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>1-element Vector{Float64}:
+ 1.498734554416028</code></pre>
+</div>
 </div>
 <p>Test correctness. You will loss all 30 points if following code throws <code>AssertError</code>.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">abs</span>(obj1 <span class="op">-</span> (<span class="op">-</span><span class="fl">2.840068438369969e6</span>)) <span class="op">&lt;</span> <span class="fl">1e-4</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">abs</span>(obj2 <span class="op">-</span> (<span class="op">-</span><span class="fl">2.84006046054206e6</span>)) <span class="op">&lt;</span> <span class="fl">1e-4</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="91">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">abs</span>(obj1 <span class="op">-</span> (<span class="op">-</span><span class="fl">2.840068438369969e6</span>)) <span class="op">&lt;</span> <span class="fl">1e-4</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">abs</span>(obj2 <span class="op">-</span> (<span class="op">-</span><span class="fl">2.84006046054206e6</span>)) <span class="op">&lt;</span> <span class="fl">1e-4</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="efficiency-1" class="level3" data-number="6.2">
 <h3 data-number="6.2" class="anchored" data-anchor-id="efficiency-1"><span class="header-section-number">6.2</span> Efficiency</h3>
 <p>Test efficiency of EM update.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>bm_emupdate <span class="op">=</span> <span class="pp">@benchmark</span> <span class="fu">update_em!</span>(<span class="op">$</span>lmm, <span class="cn">true</span>) setup<span class="op">=</span>(</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">copy!</span>(lmm.β, βtrue);</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">copy!</span>(lmm.Σ, Σtrue);</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">copy!</span>(lmm.L, Ltrue);</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    lmm.σ²[<span class="fl">1</span>] <span class="op">=</span> σ²true)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="92">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>bm_emupdate <span class="op">=</span> <span class="pp">@benchmark</span> <span class="fu">update_em!</span>(<span class="op">$</span>lmm, <span class="cn">true</span>) setup<span class="op">=</span>(</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">copy!</span>(lmm.β, βtrue);</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">copy!</span>(lmm.Σ, Σtrue);</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">copy!</span>(lmm.L, Ltrue);</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    lmm.σ²[<span class="fl">1</span>] <span class="op">=</span> σ²true)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div class="ansi-escaped-output">
+<pre>BenchmarkTools.Trial: 3326 samples with 1 evaluation.
+ Range <span class="ansi-bright-black-fg">(</span><span class="ansi-cyan-fg ansi-bold">min</span> … <span class="ansi-magenta-fg">max</span><span class="ansi-bright-black-fg">):  </span><span class="ansi-cyan-fg ansi-bold">1.456 ms</span> … <span class="ansi-magenta-fg"> 3.030 ms</span>  <span class="ansi-bright-black-fg">┊</span> GC <span class="ansi-bright-black-fg">(</span>min … max<span class="ansi-bright-black-fg">): </span>0.00% … 0.00%
+ Time  <span class="ansi-bright-black-fg">(</span><span class="ansi-blue-fg ansi-bold">median</span><span class="ansi-bright-black-fg">):     </span><span class="ansi-blue-fg ansi-bold">1.490 ms              </span><span class="ansi-bright-black-fg">┊</span> GC <span class="ansi-bright-black-fg">(</span>median<span class="ansi-bright-black-fg">):    </span>0.00%
+ Time  <span class="ansi-bright-black-fg">(</span><span class="ansi-green-fg ansi-bold">mean</span> ± <span class="ansi-green-fg">σ</span><span class="ansi-bright-black-fg">):   </span><span class="ansi-green-fg ansi-bold">1.502 ms</span> ± <span class="ansi-green-fg">53.940 μs</span>  <span class="ansi-bright-black-fg">┊</span> GC <span class="ansi-bright-black-fg">(</span>mean ± σ<span class="ansi-bright-black-fg">):  </span>0.00% ± 0.00%
+    ▁▄▆█▇<span class="ansi-blue-fg">▅</span>▃▂<span class="ansi-green-fg">▁</span>                                                 
+  ▃▅█████<span class="ansi-blue-fg">█</span>██<span class="ansi-green-fg">█</span>▇▆▅▄▄▄▄▃▃▃▃▃▂▂▂▂▂▂▂▂▂▂▂▁▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▁▂▁▂ ▃
+  1.46 ms<span class="ansi-bright-black-fg">        Histogram: frequency by time</span>        1.73 ms <span class="ansi-bold">&lt;</span>
+ Memory estimate<span class="ansi-bright-black-fg">: </span><span class="ansi-yellow-fg">0 bytes</span>, allocs estimate<span class="ansi-bright-black-fg">: </span><span class="ansi-yellow-fg">0</span>.</pre>
+</div>
+</div>
 </div>
 <p>My median run time is 1ms. You will get full credit if your median run time is within 10ms. The points you will get are</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">clamp</span>(<span class="fl">10</span> <span class="op">/</span> (<span class="fu">median</span>(bm_emupdate).time <span class="op">/</span> <span class="fl">1e6</span>) <span class="op">*</span> <span class="fl">10</span>, <span class="fl">0</span>, <span class="fl">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="93">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">clamp</span>(<span class="fl">10</span> <span class="op">/</span> (<span class="fu">median</span>(bm_emupdate).time <span class="op">/</span> <span class="fl">1e6</span>) <span class="op">*</span> <span class="fl">10</span>, <span class="fl">0</span>, <span class="fl">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>10.0</code></pre>
+</div>
 </div>
 </section>
 <section id="memory" class="level3" data-number="6.3">
 <h3 data-number="6.3" class="anchored" data-anchor-id="memory"><span class="header-section-number">6.3</span> Memory</h3>
 <p>You will lose 1 point for each 100 bytes memory allocation. So the points you will get is</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">clamp</span>(<span class="fl">10</span> <span class="op">-</span> <span class="fu">median</span>(bm_emupdate).memory <span class="op">/</span> <span class="fl">100</span>, <span class="fl">0</span>, <span class="fl">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="94">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">clamp</span>(<span class="fl">10</span> <span class="op">-</span> <span class="fu">median</span>(bm_emupdate).memory <span class="op">/</span> <span class="fl">100</span>, <span class="fl">0</span>, <span class="fl">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>10.0</code></pre>
+</div>
 </div>
 </section>
 </section>
 <section id="q7.-starting-point" class="level2" data-number="7">
 <h2 data-number="7" class="anchored" data-anchor-id="q7.-starting-point"><span class="header-section-number">7</span> Q7. Starting point</h2>
 <p>We use the same least squares estimates as in HW6 as starting point.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;&quot;&quot;</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="st">    init_ls!(m::LmmModel)</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="st">Initialize parameters of a `LmmModel` object from the least squares estimate. </span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="st">`m.β`, `m.L`, and `m.σ²` are overwritten with the least squares estimates.</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;&quot;&quot;</span></span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">init_ls!</span>(m<span class="op">::</span><span class="dt">LmmModel{T}</span>) <span class="kw">where</span> T <span class="op">&lt;:</span><span class="dt"> AbstractFloat</span></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    p, q <span class="op">=</span> <span class="fu">size</span>(m.data[<span class="fl">1</span>].X, <span class="fl">2</span>), <span class="fu">size</span>(m.data[<span class="fl">1</span>].Z, <span class="fl">2</span>)</span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># LS estimate for β</span></span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mul!</span>(m.β, m.xtxinv, m.xty)</span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># LS etimate for σ2 and Σ</span></span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    rss, ntotal <span class="op">=</span> <span class="fu">zero</span>(T), <span class="fl">0</span></span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fill!</span>(m.ztz2, <span class="fl">0</span>)</span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fill!</span>(m.ztr2, <span class="fl">0</span>)    </span>
-<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@inbounds</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="fu">eachindex</span>(m.data)</span>
-<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>        obs <span class="op">=</span> m.data[i]</span>
-<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>        ntotal <span class="op">+=</span> <span class="fu">length</span>(obs.y)</span>
-<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>        <span class="co"># update Xt * res</span></span>
-<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>        BLAS.<span class="fu">gemv!</span>(<span class="ch">&#39;N&#39;</span>, <span class="fu">T</span>(<span class="op">-</span><span class="fl">1</span>), obs.xtx, m.β, <span class="fu">T</span>(<span class="fl">1</span>), <span class="fu">copy!</span>(obs.xtr, obs.xty))</span>
-<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>        <span class="co"># rss of i-th individual</span></span>
-<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>        rss <span class="op">+=</span> obs.yty <span class="op">-</span> <span class="fu">dot</span>(obs.xty, m.β) <span class="op">-</span> <span class="fu">dot</span>(obs.xtr, m.β)</span>
-<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>        <span class="co"># update Zi&#39; * res</span></span>
-<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>        BLAS.<span class="fu">gemv!</span>(<span class="ch">&#39;N&#39;</span>, <span class="fu">T</span>(<span class="op">-</span><span class="fl">1</span>), obs.ztx, m.β, <span class="fu">T</span>(<span class="fl">1</span>), <span class="fu">copy!</span>(obs.ztr, obs.zty))</span>
-<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Zi&#39;Zi ⊗ Zi&#39;Zi</span></span>
-<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>        <span class="fu">kron_axpy!</span>(obs.ztz, obs.ztz, m.ztz2)</span>
-<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Zi&#39;res ⊗ Zi&#39;res</span></span>
-<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>        <span class="fu">kron_axpy!</span>(obs.ztr, obs.ztr, m.ztr2)</span>
-<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a>    m.σ²[<span class="fl">1</span>] <span class="op">=</span> rss <span class="op">/</span> ntotal</span>
-<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># LS estimate for Σ = LLt</span></span>
-<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a>    LAPACK.<span class="fu">potrf!</span>(<span class="ch">&#39;U&#39;</span>, m.ztz2)</span>
-<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>    BLAS.<span class="fu">trsv!</span>(<span class="ch">&#39;U&#39;</span>, <span class="ch">&#39;T&#39;</span>, <span class="ch">&#39;N&#39;</span>, m.ztz2, m.ztr2)</span>
-<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a>    BLAS.<span class="fu">trsv!</span>(<span class="ch">&#39;U&#39;</span>, <span class="ch">&#39;N&#39;</span>, <span class="ch">&#39;N&#39;</span>, m.ztz2, m.ztr2)</span>
-<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">copyto!</span>(m.Σ, m.ztr2)</span>
-<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">copy!</span>(m.L, m.Σ)</span>
-<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a>    LAPACK.<span class="fu">potrf!</span>(<span class="ch">&#39;L&#39;</span>, m.L)</span>
-<span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="fl">2</span><span class="op">:</span>q, i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>j<span class="op">-</span><span class="fl">1</span></span>
-<span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a>        m.L[i, j] <span class="op">=</span> <span class="fl">0</span></span>
-<span id="cb20-39"><a href="#cb20-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb20-40"><a href="#cb20-40" aria-hidden="true" tabindex="-1"></a>    m</span>
-<span id="cb20-41"><a href="#cb20-41" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
-<span id="cb20-42"><a href="#cb20-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-43"><a href="#cb20-43" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;&quot;&quot;</span></span>
-<span id="cb20-44"><a href="#cb20-44" aria-hidden="true" tabindex="-1"></a><span class="st">    kron_axpy!(A, X, Y)</span></span>
-<span id="cb20-45"><a href="#cb20-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-46"><a href="#cb20-46" aria-hidden="true" tabindex="-1"></a><span class="st">Overwrite `Y` with `A ⊗ X + Y`. Same as `Y += kron(A, X)` but</span></span>
-<span id="cb20-47"><a href="#cb20-47" aria-hidden="true" tabindex="-1"></a><span class="st">more memory efficient.</span></span>
-<span id="cb20-48"><a href="#cb20-48" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;&quot;&quot;</span></span>
-<span id="cb20-49"><a href="#cb20-49" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">kron_axpy!</span>(</span>
-<span id="cb20-50"><a href="#cb20-50" aria-hidden="true" tabindex="-1"></a>        A<span class="op">::</span><span class="dt">AbstractVecOrMat{T}</span>,</span>
-<span id="cb20-51"><a href="#cb20-51" aria-hidden="true" tabindex="-1"></a>        X<span class="op">::</span><span class="dt">AbstractVecOrMat{T}</span>,</span>
-<span id="cb20-52"><a href="#cb20-52" aria-hidden="true" tabindex="-1"></a>        Y<span class="op">::</span><span class="dt">AbstractVecOrMat{T}</span></span>
-<span id="cb20-53"><a href="#cb20-53" aria-hidden="true" tabindex="-1"></a>        ) <span class="kw">where</span> T <span class="op">&lt;:</span><span class="dt"> Real</span></span>
-<span id="cb20-54"><a href="#cb20-54" aria-hidden="true" tabindex="-1"></a>    m, n <span class="op">=</span> <span class="fu">size</span>(A, <span class="fl">1</span>), <span class="fu">size</span>(A, <span class="fl">2</span>)</span>
-<span id="cb20-55"><a href="#cb20-55" aria-hidden="true" tabindex="-1"></a>    p, q <span class="op">=</span> <span class="fu">size</span>(X, <span class="fl">1</span>), <span class="fu">size</span>(X, <span class="fl">2</span>)</span>
-<span id="cb20-56"><a href="#cb20-56" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@assert</span> <span class="fu">size</span>(Y, <span class="fl">1</span>) <span class="op">==</span> m <span class="op">*</span> p</span>
-<span id="cb20-57"><a href="#cb20-57" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@assert</span> <span class="fu">size</span>(Y, <span class="fl">2</span>) <span class="op">==</span> n <span class="op">*</span> q</span>
-<span id="cb20-58"><a href="#cb20-58" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@inbounds</span> <span class="cf">for</span> j <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>n</span>
-<span id="cb20-59"><a href="#cb20-59" aria-hidden="true" tabindex="-1"></a>        coffset <span class="op">=</span> (j <span class="op">-</span> <span class="fl">1</span>) <span class="op">*</span> q</span>
-<span id="cb20-60"><a href="#cb20-60" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>m</span>
-<span id="cb20-61"><a href="#cb20-61" aria-hidden="true" tabindex="-1"></a>            a <span class="op">=</span> A[i, j]</span>
-<span id="cb20-62"><a href="#cb20-62" aria-hidden="true" tabindex="-1"></a>            roffset <span class="op">=</span> (i <span class="op">-</span> <span class="fl">1</span>) <span class="op">*</span> p            </span>
-<span id="cb20-63"><a href="#cb20-63" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> l <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>q</span>
-<span id="cb20-64"><a href="#cb20-64" aria-hidden="true" tabindex="-1"></a>                r <span class="op">=</span> roffset <span class="op">+</span> <span class="fl">1</span></span>
-<span id="cb20-65"><a href="#cb20-65" aria-hidden="true" tabindex="-1"></a>                c <span class="op">=</span> coffset <span class="op">+</span> l</span>
-<span id="cb20-66"><a href="#cb20-66" aria-hidden="true" tabindex="-1"></a>                <span class="cf">for</span> k <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>p                </span>
-<span id="cb20-67"><a href="#cb20-67" aria-hidden="true" tabindex="-1"></a>                    Y[r, c] <span class="op">+=</span> a <span class="op">*</span> X[k, l]</span>
-<span id="cb20-68"><a href="#cb20-68" aria-hidden="true" tabindex="-1"></a>                    r <span class="op">+=</span> <span class="fl">1</span></span>
-<span id="cb20-69"><a href="#cb20-69" aria-hidden="true" tabindex="-1"></a>                <span class="cf">end</span></span>
-<span id="cb20-70"><a href="#cb20-70" aria-hidden="true" tabindex="-1"></a>            <span class="cf">end</span></span>
-<span id="cb20-71"><a href="#cb20-71" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
-<span id="cb20-72"><a href="#cb20-72" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb20-73"><a href="#cb20-73" aria-hidden="true" tabindex="-1"></a>    Y</span>
-<span id="cb20-74"><a href="#cb20-74" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="95">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;&quot;&quot;</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="st">    init_ls!(m::LmmModel)</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="st">Initialize parameters of a `LmmModel` object from the least squares estimate. </span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="st">`m.β`, `m.L`, and `m.σ²` are overwritten with the least squares estimates.</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;&quot;&quot;</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">init_ls!</span>(m<span class="op">::</span><span class="dt">LmmModel{T}</span>) <span class="kw">where</span> T <span class="op">&lt;:</span><span class="dt"> AbstractFloat</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>    p, q <span class="op">=</span> <span class="fu">size</span>(m.data[<span class="fl">1</span>].X, <span class="fl">2</span>), <span class="fu">size</span>(m.data[<span class="fl">1</span>].Z, <span class="fl">2</span>)</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># LS estimate for β</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mul!</span>(m.β, m.xtxinv, m.xty)</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># LS etimate for σ2 and Σ</span></span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>    rss, ntotal <span class="op">=</span> <span class="fu">zero</span>(T), <span class="fl">0</span></span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fill!</span>(m.ztz2, <span class="fl">0</span>)</span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fill!</span>(m.ztr2, <span class="fl">0</span>)    </span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@inbounds</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="fu">eachindex</span>(m.data)</span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a>        obs <span class="op">=</span> m.data[i]</span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a>        ntotal <span class="op">+=</span> <span class="fu">length</span>(obs.y)</span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a>        <span class="co"># update Xt * res</span></span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a>        BLAS.<span class="fu">gemv!</span>(<span class="ch">&#39;N&#39;</span>, <span class="fu">T</span>(<span class="op">-</span><span class="fl">1</span>), obs.xtx, m.β, <span class="fu">T</span>(<span class="fl">1</span>), <span class="fu">copy!</span>(obs.xtr, obs.xty))</span>
+<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a>        <span class="co"># rss of i-th individual</span></span>
+<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a>        rss <span class="op">+=</span> obs.yty <span class="op">-</span> <span class="fu">dot</span>(obs.xty, m.β) <span class="op">-</span> <span class="fu">dot</span>(obs.xtr, m.β)</span>
+<span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a>        <span class="co"># update Zi&#39; * res</span></span>
+<span id="cb32-23"><a href="#cb32-23" aria-hidden="true" tabindex="-1"></a>        BLAS.<span class="fu">gemv!</span>(<span class="ch">&#39;N&#39;</span>, <span class="fu">T</span>(<span class="op">-</span><span class="fl">1</span>), obs.ztx, m.β, <span class="fu">T</span>(<span class="fl">1</span>), <span class="fu">copy!</span>(obs.ztr, obs.zty))</span>
+<span id="cb32-24"><a href="#cb32-24" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Zi&#39;Zi ⊗ Zi&#39;Zi</span></span>
+<span id="cb32-25"><a href="#cb32-25" aria-hidden="true" tabindex="-1"></a>        <span class="fu">kron_axpy!</span>(obs.ztz, obs.ztz, m.ztz2)</span>
+<span id="cb32-26"><a href="#cb32-26" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Zi&#39;res ⊗ Zi&#39;res</span></span>
+<span id="cb32-27"><a href="#cb32-27" aria-hidden="true" tabindex="-1"></a>        <span class="fu">kron_axpy!</span>(obs.ztr, obs.ztr, m.ztr2)</span>
+<span id="cb32-28"><a href="#cb32-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb32-29"><a href="#cb32-29" aria-hidden="true" tabindex="-1"></a>    m.σ²[<span class="fl">1</span>] <span class="op">=</span> rss <span class="op">/</span> ntotal</span>
+<span id="cb32-30"><a href="#cb32-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># LS estimate for Σ = LLt</span></span>
+<span id="cb32-31"><a href="#cb32-31" aria-hidden="true" tabindex="-1"></a>    LAPACK.<span class="fu">potrf!</span>(<span class="ch">&#39;U&#39;</span>, m.ztz2)</span>
+<span id="cb32-32"><a href="#cb32-32" aria-hidden="true" tabindex="-1"></a>    BLAS.<span class="fu">trsv!</span>(<span class="ch">&#39;U&#39;</span>, <span class="ch">&#39;T&#39;</span>, <span class="ch">&#39;N&#39;</span>, m.ztz2, m.ztr2)</span>
+<span id="cb32-33"><a href="#cb32-33" aria-hidden="true" tabindex="-1"></a>    BLAS.<span class="fu">trsv!</span>(<span class="ch">&#39;U&#39;</span>, <span class="ch">&#39;N&#39;</span>, <span class="ch">&#39;N&#39;</span>, m.ztz2, m.ztr2)</span>
+<span id="cb32-34"><a href="#cb32-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">copyto!</span>(m.Σ, m.ztr2)</span>
+<span id="cb32-35"><a href="#cb32-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">copy!</span>(m.L, m.Σ)</span>
+<span id="cb32-36"><a href="#cb32-36" aria-hidden="true" tabindex="-1"></a>    LAPACK.<span class="fu">potrf!</span>(<span class="ch">&#39;L&#39;</span>, m.L)</span>
+<span id="cb32-37"><a href="#cb32-37" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="fl">2</span><span class="op">:</span>q, i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>j<span class="op">-</span><span class="fl">1</span></span>
+<span id="cb32-38"><a href="#cb32-38" aria-hidden="true" tabindex="-1"></a>        m.L[i, j] <span class="op">=</span> <span class="fl">0</span></span>
+<span id="cb32-39"><a href="#cb32-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb32-40"><a href="#cb32-40" aria-hidden="true" tabindex="-1"></a>    m</span>
+<span id="cb32-41"><a href="#cb32-41" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb32-42"><a href="#cb32-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-43"><a href="#cb32-43" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;&quot;&quot;</span></span>
+<span id="cb32-44"><a href="#cb32-44" aria-hidden="true" tabindex="-1"></a><span class="st">    kron_axpy!(A, X, Y)</span></span>
+<span id="cb32-45"><a href="#cb32-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-46"><a href="#cb32-46" aria-hidden="true" tabindex="-1"></a><span class="st">Overwrite `Y` with `A ⊗ X + Y`. Same as `Y += kron(A, X)` but</span></span>
+<span id="cb32-47"><a href="#cb32-47" aria-hidden="true" tabindex="-1"></a><span class="st">more memory efficient.</span></span>
+<span id="cb32-48"><a href="#cb32-48" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;&quot;&quot;</span></span>
+<span id="cb32-49"><a href="#cb32-49" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">kron_axpy!</span>(</span>
+<span id="cb32-50"><a href="#cb32-50" aria-hidden="true" tabindex="-1"></a>        A<span class="op">::</span><span class="dt">AbstractVecOrMat{T}</span>,</span>
+<span id="cb32-51"><a href="#cb32-51" aria-hidden="true" tabindex="-1"></a>        X<span class="op">::</span><span class="dt">AbstractVecOrMat{T}</span>,</span>
+<span id="cb32-52"><a href="#cb32-52" aria-hidden="true" tabindex="-1"></a>        Y<span class="op">::</span><span class="dt">AbstractVecOrMat{T}</span></span>
+<span id="cb32-53"><a href="#cb32-53" aria-hidden="true" tabindex="-1"></a>        ) <span class="kw">where</span> T <span class="op">&lt;:</span><span class="dt"> Real</span></span>
+<span id="cb32-54"><a href="#cb32-54" aria-hidden="true" tabindex="-1"></a>    m, n <span class="op">=</span> <span class="fu">size</span>(A, <span class="fl">1</span>), <span class="fu">size</span>(A, <span class="fl">2</span>)</span>
+<span id="cb32-55"><a href="#cb32-55" aria-hidden="true" tabindex="-1"></a>    p, q <span class="op">=</span> <span class="fu">size</span>(X, <span class="fl">1</span>), <span class="fu">size</span>(X, <span class="fl">2</span>)</span>
+<span id="cb32-56"><a href="#cb32-56" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@assert</span> <span class="fu">size</span>(Y, <span class="fl">1</span>) <span class="op">==</span> m <span class="op">*</span> p</span>
+<span id="cb32-57"><a href="#cb32-57" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@assert</span> <span class="fu">size</span>(Y, <span class="fl">2</span>) <span class="op">==</span> n <span class="op">*</span> q</span>
+<span id="cb32-58"><a href="#cb32-58" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@inbounds</span> <span class="cf">for</span> j <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>n</span>
+<span id="cb32-59"><a href="#cb32-59" aria-hidden="true" tabindex="-1"></a>        coffset <span class="op">=</span> (j <span class="op">-</span> <span class="fl">1</span>) <span class="op">*</span> q</span>
+<span id="cb32-60"><a href="#cb32-60" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>m</span>
+<span id="cb32-61"><a href="#cb32-61" aria-hidden="true" tabindex="-1"></a>            a <span class="op">=</span> A[i, j]</span>
+<span id="cb32-62"><a href="#cb32-62" aria-hidden="true" tabindex="-1"></a>            roffset <span class="op">=</span> (i <span class="op">-</span> <span class="fl">1</span>) <span class="op">*</span> p            </span>
+<span id="cb32-63"><a href="#cb32-63" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> l <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>q</span>
+<span id="cb32-64"><a href="#cb32-64" aria-hidden="true" tabindex="-1"></a>                r <span class="op">=</span> roffset <span class="op">+</span> <span class="fl">1</span></span>
+<span id="cb32-65"><a href="#cb32-65" aria-hidden="true" tabindex="-1"></a>                c <span class="op">=</span> coffset <span class="op">+</span> l</span>
+<span id="cb32-66"><a href="#cb32-66" aria-hidden="true" tabindex="-1"></a>                <span class="cf">for</span> k <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>p                </span>
+<span id="cb32-67"><a href="#cb32-67" aria-hidden="true" tabindex="-1"></a>                    Y[r, c] <span class="op">+=</span> a <span class="op">*</span> X[k, l]</span>
+<span id="cb32-68"><a href="#cb32-68" aria-hidden="true" tabindex="-1"></a>                    r <span class="op">+=</span> <span class="fl">1</span></span>
+<span id="cb32-69"><a href="#cb32-69" aria-hidden="true" tabindex="-1"></a>                <span class="cf">end</span></span>
+<span id="cb32-70"><a href="#cb32-70" aria-hidden="true" tabindex="-1"></a>            <span class="cf">end</span></span>
+<span id="cb32-71"><a href="#cb32-71" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
+<span id="cb32-72"><a href="#cb32-72" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb32-73"><a href="#cb32-73" aria-hidden="true" tabindex="-1"></a>    Y</span>
+<span id="cb32-74"><a href="#cb32-74" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>kron_axpy!</code></pre>
 </div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">init_ls!</span>(lmm)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> lmm.β</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> lmm.Σ</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> lmm.L</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> lmm.σ²</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="96">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">init_ls!</span>(lmm)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> lmm.β</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> lmm.Σ</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> lmm.L</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> lmm.σ²</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>lmm.β = [0.18207934611476326, 6.50048070099372, -3.4979107842091595, 1.0011132962297953, 5.0002519857919285]
+lmm.Σ = [1.9794302836685058 0.07258461003916691 0.05717147035274022; 0.07258461003916693 1.2840385734767714 -0.07707942768978564; 0.05717147035274022 -0.07707942768978564 0.9509885905046899]
+lmm.L = [1.4069222734993236 0.0 0.0; 0.05159105901325531 1.1319792118703693 0.0; 0.04063584138912114 -0.06994463586493145 0.9718256360134827]
+lmm.σ² = [5.709004733413668]</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>1-element Vector{Float64}:
+ 5.709004733413668</code></pre>
+</div>
 </div>
 </section>
 <section id="q8.-estimation-by-em" class="level2" data-number="8">
 <h2 data-number="8" class="anchored" data-anchor-id="q8.-estimation-by-em"><span class="header-section-number">8</span> Q8. Estimation by EM</h2>
 <p>We write a function <code>fit!</code> that implements the EM algorithm for estimating LMM.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;&quot;&quot;</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="st">    fit!(m::LmmModel)</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="st">Fit an `LmmModel` object by MLE using a EM algorithm. Start point </span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="st">should be provided in `m.β`, `m.σ²`, `m.L`.</span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;&quot;&quot;</span></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">fit!</span>(</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>        m       <span class="op">::</span><span class="dt"> LmmModel</span>;</span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>        maxiter <span class="op">::</span><span class="dt"> Integer       </span><span class="op">=</span> <span class="fl">10_000</span>,</span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>        ftolrel <span class="op">::</span><span class="dt"> AbstractFloat </span><span class="op">=</span> <span class="fl">1e-12</span>,</span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>        prtfreq <span class="op">::</span><span class="dt"> Integer       </span><span class="op">=</span> <span class="fl">0</span></span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>    obj <span class="op">=</span> <span class="fu">update_em!</span>(m, <span class="cn">true</span>)</span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> iter <span class="kw">in</span> <span class="fl">0</span><span class="op">:</span>maxiter</span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>        obj_old <span class="op">=</span> obj</span>
-<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>        <span class="co"># EM update</span></span>
-<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>        obj <span class="op">=</span> <span class="fu">update_em!</span>(m, <span class="cn">false</span>)</span>
-<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>        <span class="co"># print obj</span></span>
-<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>        prtfreq <span class="op">&gt;</span> <span class="fl">0</span> <span class="op">&amp;&amp;</span> <span class="fu">rem</span>(iter, prtfreq) <span class="op">==</span> <span class="fl">0</span> <span class="op">&amp;&amp;</span> <span class="fu">println</span>(<span class="st">&quot;iter=</span><span class="sc">$</span>iter<span class="st">, obj=</span><span class="sc">$</span>obj<span class="st">&quot;</span>)</span>
-<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>        <span class="co"># check monotonicity</span></span>
-<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>        obj <span class="op">&lt;</span> obj_old <span class="op">&amp;&amp;</span> (<span class="pp">@warn</span> <span class="st">&quot;monotoniciy violated&quot;</span>)</span>
-<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>        <span class="co"># check convergence criterion</span></span>
-<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>        (obj <span class="op">-</span> obj_old) <span class="op">&lt;</span> ftolrel <span class="op">*</span> (<span class="fu">abs</span>(obj_old) <span class="op">+</span> <span class="fl">1</span>) <span class="op">&amp;&amp;</span> <span class="cf">break</span></span>
-<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>        <span class="co"># warning about non-convergence</span></span>
-<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>        iter <span class="op">==</span> maxiter <span class="op">&amp;&amp;</span> (<span class="pp">@warn</span> <span class="st">&quot;maximum iterations reached&quot;</span>)</span>
-<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>    m</span>
-<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="97">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;&quot;&quot;</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="st">    fit!(m::LmmModel)</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="st">Fit an `LmmModel` object by MLE using a EM algorithm. Start point </span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="st">should be provided in `m.β`, `m.σ²`, `m.L`.</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;&quot;&quot;</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">fit!</span>(</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>        m       <span class="op">::</span><span class="dt"> LmmModel</span>;</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>        maxiter <span class="op">::</span><span class="dt"> Integer       </span><span class="op">=</span> <span class="fl">10_000</span>,</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>        ftolrel <span class="op">::</span><span class="dt"> AbstractFloat </span><span class="op">=</span> <span class="fl">1e-12</span>,</span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>        prtfreq <span class="op">::</span><span class="dt"> Integer       </span><span class="op">=</span> <span class="fl">0</span></span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>    obj <span class="op">=</span> <span class="fu">update_em!</span>(m, <span class="cn">true</span>)</span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> iter <span class="kw">in</span> <span class="fl">0</span><span class="op">:</span>maxiter</span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>        obj_old <span class="op">=</span> obj</span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>        <span class="co"># EM update</span></span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>        obj <span class="op">=</span> <span class="fu">update_em!</span>(m, <span class="cn">false</span>)</span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>        <span class="co"># print obj</span></span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a>        prtfreq <span class="op">&gt;</span> <span class="fl">0</span> <span class="op">&amp;&amp;</span> <span class="fu">rem</span>(iter, prtfreq) <span class="op">==</span> <span class="fl">0</span> <span class="op">&amp;&amp;</span> <span class="fu">println</span>(<span class="st">&quot;iter=</span><span class="sc">$</span>iter<span class="st">, obj=</span><span class="sc">$</span>obj<span class="st">&quot;</span>)</span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a>        <span class="co"># check monotonicity</span></span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a>        obj <span class="op">&lt;</span> obj_old <span class="op">&amp;&amp;</span> (<span class="pp">@warn</span> <span class="st">&quot;monotoniciy violated&quot;</span>)</span>
+<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a>        <span class="co"># check convergence criterion</span></span>
+<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a>        (obj <span class="op">-</span> obj_old) <span class="op">&lt;</span> ftolrel <span class="op">*</span> (<span class="fu">abs</span>(obj_old) <span class="op">+</span> <span class="fl">1</span>) <span class="op">&amp;&amp;</span> <span class="cf">break</span></span>
+<span id="cb37-24"><a href="#cb37-24" aria-hidden="true" tabindex="-1"></a>        <span class="co"># warning about non-convergence</span></span>
+<span id="cb37-25"><a href="#cb37-25" aria-hidden="true" tabindex="-1"></a>        iter <span class="op">==</span> maxiter <span class="op">&amp;&amp;</span> (<span class="pp">@warn</span> <span class="st">&quot;maximum iterations reached&quot;</span>)</span>
+<span id="cb37-26"><a href="#cb37-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb37-27"><a href="#cb37-27" aria-hidden="true" tabindex="-1"></a>    m</span>
+<span id="cb37-28"><a href="#cb37-28" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>fit!</code></pre>
+</div>
 </div>
 </section>
 <section id="q9.-20-pts-test-drive" class="level2" data-number="9">
 <h2 data-number="9" class="anchored" data-anchor-id="q9.-20-pts-test-drive"><span class="header-section-number">9</span> Q9. (20 pts) Test drive</h2>
 <p>Now we can run our EM algorithm to compute the MLE.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># initialize from least squares</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">init_ls!</span>(lmm)</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> <span class="fu">fit!</span>(lmm, prtfreq <span class="op">=</span> <span class="fl">1</span>);</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">&quot;objective value at solution: &quot;</span>, <span class="fu">update_em!</span>(lmm)); <span class="fu">println</span>()</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">&quot;solution values:&quot;</span>)</span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> lmm.β</span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> lmm.σ²</span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> lmm.L <span class="op">*</span> <span class="fu">transpose</span>(lmm.L)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="98">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># initialize from least squares</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">init_ls!</span>(lmm)</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> <span class="fu">fit!</span>(lmm, ftolrel <span class="op">=</span> <span class="fl">1e-12</span>, prtfreq <span class="op">=</span> <span class="fl">1</span>);</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">&quot;objective value at solution: &quot;</span>, <span class="fu">update_em!</span>(lmm)); <span class="fu">println</span>()</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">&quot;solution values:&quot;</span>)</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> lmm.β</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> lmm.σ²</span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> lmm.L <span class="op">*</span> <span class="fu">transpose</span>(lmm.L)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>iter=0, obj=-2.8400688821783797e6
+iter=1, obj=-2.8400587867556894e6
+iter=2, obj=-2.840058786725548e6
+iter=3, obj=-2.840058786725478e6
+  0.025193 seconds (17.18 k allocations: 1.211 MiB, 69.26% compilation time)</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>objective value at solution: -2.8400587867254117e6
+
+solution values:
+lmm.β = [0.18207855803149206, 6.500383547392576, -3.499864296224195, 0.9997119252318636, 4.999229481214088]
+lmm.σ² = [1.498734551919432]
+lmm.L * transpose(lmm.L) = [1.983631984277848 0.06575202041811087 0.05528837687885904; 0.06575202041811087 1.2814409879932709 -0.09059254193517799; 0.05528837687885904 -0.09059254193517799 0.9434430471656207]</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>3×3 Matrix{Float64}:
+ 1.98363     0.065752    0.0552884
+ 0.065752    1.28144    -0.0905925
+ 0.0552884  -0.0905925   0.943443</code></pre>
+</div>
 </div>
 <section id="correctness-2" class="level3" data-number="9.1">
 <h3 data-number="9.1" class="anchored" data-anchor-id="correctness-2"><span class="header-section-number">9.1</span> Correctness</h3>
 <p>You get 10 points if the following code does not throw <code>AssertError</code>.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># objective at solution should be close enough to the optimal</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">update_em!</span>(lmm) <span class="op">&gt;</span> <span class="op">-</span><span class="fl">2.840059e6</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="99">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># objective at solution should be close enough to the optimal</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">update_em!</span>(lmm) <span class="op">&gt;</span> <span class="op">-</span><span class="fl">2.840059e6</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="efficiency-2" class="level3" data-number="9.2">
 <h3 data-number="9.2" class="anchored" data-anchor-id="efficiency-2"><span class="header-section-number">9.2</span> Efficiency</h3>
 <p>My median run time 5ms. You get 10 points if your median run time is within 1s.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>bm_em <span class="op">=</span> <span class="pp">@benchmark</span> <span class="fu">fit!</span>(<span class="op">$</span>lmm) setup <span class="op">=</span> (<span class="fu">init_ls!</span>(lmm))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="100">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>bm_em <span class="op">=</span> <span class="pp">@benchmark</span> <span class="fu">fit!</span>(<span class="op">$</span>lmm) setup <span class="op">=</span> (<span class="fu">init_ls!</span>(lmm))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div class="ansi-escaped-output">
+<pre>BenchmarkTools.Trial: 674 samples with 1 evaluation.
+ Range <span class="ansi-bright-black-fg">(</span><span class="ansi-cyan-fg ansi-bold">min</span> … <span class="ansi-magenta-fg">max</span><span class="ansi-bright-black-fg">):  </span><span class="ansi-cyan-fg ansi-bold">6.884 ms</span> … <span class="ansi-magenta-fg">  8.460 ms</span>  <span class="ansi-bright-black-fg">┊</span> GC <span class="ansi-bright-black-fg">(</span>min … max<span class="ansi-bright-black-fg">): </span>0.00% … 0.00%
+ Time  <span class="ansi-bright-black-fg">(</span><span class="ansi-blue-fg ansi-bold">median</span><span class="ansi-bright-black-fg">):     </span><span class="ansi-blue-fg ansi-bold">7.067 ms               </span><span class="ansi-bright-black-fg">┊</span> GC <span class="ansi-bright-black-fg">(</span>median<span class="ansi-bright-black-fg">):    </span>0.00%
+ Time  <span class="ansi-bright-black-fg">(</span><span class="ansi-green-fg ansi-bold">mean</span> ± <span class="ansi-green-fg">σ</span><span class="ansi-bright-black-fg">):   </span><span class="ansi-green-fg ansi-bold">7.145 ms</span> ± <span class="ansi-green-fg">225.059 μs</span>  <span class="ansi-bright-black-fg">┊</span> GC <span class="ansi-bright-black-fg">(</span>mean ± σ<span class="ansi-bright-black-fg">):  </span>0.00% ± 0.00%
+     ▁▄▅█▆█▂<span class="ansi-blue-fg">▃</span>▂   <span class="ansi-green-fg"> </span>                                             
+  ▄▃▇███████<span class="ansi-blue-fg">█</span>███▆<span class="ansi-green-fg">▆</span>▆▅▄▆▄▅▅▃▃▅▅▅▄▃▃▄▃▃▄▂▁▃▃▁▂▃▃▃▃▃▂▃▃▃▂▃▃▃▂▁▁▂▃ ▄
+  6.88 ms<span class="ansi-bright-black-fg">         Histogram: frequency by time</span>        7.93 ms <span class="ansi-bold">&lt;</span>
+ Memory estimate<span class="ansi-bright-black-fg">: </span><span class="ansi-yellow-fg">0 bytes</span>, allocs estimate<span class="ansi-bright-black-fg">: </span><span class="ansi-yellow-fg">0</span>.</pre>
 </div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># this is the points you get</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">clamp</span>(<span class="fl">1</span> <span class="op">/</span> (<span class="fu">median</span>(bm_em).time <span class="op">/</span> <span class="fl">1e9</span>) <span class="op">*</span> <span class="fl">10</span>, <span class="fl">0</span>, <span class="fl">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="cell" data-execution_count="101">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># this is the points you get</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">clamp</span>(<span class="fl">1</span> <span class="op">/</span> (<span class="fu">median</span>(bm_em).time <span class="op">/</span> <span class="fl">1e9</span>) <span class="op">*</span> <span class="fl">10</span>, <span class="fl">0</span>, <span class="fl">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>10.0</code></pre>
+</div>
 </div>
 </section>
 </section>
 <section id="q10.-10-pts-em-vs-newton-type-algorithms" class="level2" data-number="10">
 <h2 data-number="10" class="anchored" data-anchor-id="q10.-10-pts-em-vs-newton-type-algorithms"><span class="header-section-number">10</span> Q10. (10 pts) EM vs Newton type algorithms</h2>
 <p>Contrast EM algorithm to the Newton type algorithms (gradient free, gradient based, using Hessian) in HW6, in terms of the stability, convergence rate (how fast the algorithm is converging), final objective value, total run time, derivation, and implementation efforts.</p>
+<section id="q10-answer" class="level3" data-number="10.1">
+<h3 data-number="10.1" class="anchored" data-anchor-id="q10-answer"><span class="header-section-number">10.1</span> Q10 Answer</h3>
+<p>Comparing the results from last homework, EM algorithm is quicker in total run time and convergence rate than Newton type algorithms. They got similar final results with a objective function <span class="math inline">\(\approx -2840059\)</span>. The Mathematical derivation for EM is easier than Newton type algorithms (Newton type algorithms require complex matrix derivatives). However, for the coding part, my personal feeling is that EM is more difficult than Newton type algorithms because we have handy solvers for the Newton type algorithm, which saved us a lot of effort.</p>
+</section>
 </section>
 
 </main>
